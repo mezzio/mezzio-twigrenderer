@@ -1,22 +1,23 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-twigrenderer for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-twigrenderer/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-twigrenderer/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Expressive\Twig;
+namespace Mezzio\Twig;
 
 use ArrayObject;
 use DateTimeZone;
 use Interop\Container\ContainerInterface;
+use Mezzio\Helper\ServerUrlHelper;
+use Mezzio\Helper\UrlHelper;
 use Twig_Environment as TwigEnvironment;
 use Twig_Extension_Debug as TwigExtensionDebug;
 use Twig_ExtensionInterface as TwigExtensionInterface;
 use Twig_Loader_Filesystem as TwigLoader;
 use Twig_RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
-use Zend\Expressive\Helper\ServerUrlHelper;
-use Zend\Expressive\Helper\UrlHelper;
 
 /**
  * Create and return a Twig Environment instance.
@@ -102,7 +103,7 @@ class TwigEnvironmentFactory
             $environment->getExtension('core')->setTimezone($timezone);
         }
 
-        // Add expressive twig extension
+        // Add mezzio twig extension
         if ($container->has(ServerUrlHelper::class) && $container->has(UrlHelper::class)) {
             $environment->addExtension(new TwigExtension(
                 $container->get(ServerUrlHelper::class),
@@ -237,7 +238,7 @@ class TwigEnvironmentFactory
     }
 
     /**
-     * Merge expressive templating config with twig config.
+     * Merge mezzio templating config with twig config.
      *
      * Pulls the `templates` and `twig` top-level keys from the configuration,
      * if present, and then returns the merged result, with those from the twig
@@ -259,13 +260,13 @@ class TwigEnvironmentFactory
             ));
         }
 
-        $expressiveConfig = (isset($config['templates']) && is_array($config['templates']))
+        $mezzioConfig = (isset($config['templates']) && is_array($config['templates']))
             ? $config['templates']
             : [];
         $twigConfig = (isset($config['twig']) && is_array($config['twig']))
             ? $config['twig']
             : [];
 
-        return array_replace_recursive($expressiveConfig, $twigConfig);
+        return array_replace_recursive($mezzioConfig, $twigConfig);
     }
 }
