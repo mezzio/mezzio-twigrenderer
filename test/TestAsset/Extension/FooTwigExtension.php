@@ -1,6 +1,6 @@
 <?php
 
-namespace ZendTest\Expressive\Twig\TestAsset\Extension;
+namespace MezzioTest\Twig\TestAsset\Extension;
 
 class FooTwigExtension extends \Twig_Extension
 {
