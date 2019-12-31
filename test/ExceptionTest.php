@@ -1,18 +1,19 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-twigrenderer for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-twigrenderer/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-twigrenderer/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace ZendTest\Expressive\Twig;
+namespace MezzioTest\Twig;
 
 use Generator;
+use Mezzio\Template\Exception\ExceptionInterface as TemplateExceptionInterface;
+use Mezzio\Twig\Exception\ExceptionInterface;
 use PHPUnit\Framework\TestCase;
-use Zend\Expressive\Template\Exception\ExceptionInterface as TemplateExceptionInterface;
-use Zend\Expressive\Twig\Exception\ExceptionInterface;
 
 use function basename;
 use function glob;

@@ -1,50 +1,24 @@
 {
-    "name": "zendframework/zend-expressive-twigrenderer",
-    "description": "Twig integration for Expressive",
+    "name": "mezzio/mezzio-twigrenderer",
+    "description": "Twig integration for Mezzio",
     "license": "BSD-3-Clause",
     "keywords": [
-        "expressive",
+        "laminas",
+        "mezzio",
         "http",
         "middleware",
         "psr",
         "psr-7",
-        "twig",
-        "zf",
-        "zendframework",
-        "zend-expressive"
+        "twig"
     ],
+    "homepage": "https://mezzio.dev",
     "support": {
-        "issues": "https://github.com/zendframework/zend-expressive-twigrenderer/issues",
-        "source": "https://github.com/zendframework/zend-expressive-twigrenderer",
-        "rss": "https://github.com/zendframework/zend-expressive-twigrenderer/releases.atom",
-        "slack": "https://zendframework-slack.herokuapp.com",
-        "forum": "https://discourse.zendframework.com/c/questions/expressive"
-    },
-    "require": {
-        "php": "^7.1",
-        "psr/container": "^1.0",
-        "twig/twig": "^1.32 || ^2.1",
-        "zendframework/zend-expressive-helpers": "^5.0",
-        "zendframework/zend-expressive-router": "^3.0",
-        "zendframework/zend-expressive-template": "^2.0"
-    },
-    "require-dev": {
-        "malukenho/docheader": "^0.1.5",
-        "phpunit/phpunit": "^7.0.2",
-        "zendframework/zend-coding-standard": "~1.0.0"
-    },
-    "conflict": {
-        "container-interop/container-interop": "<1.2.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Zend\\Expressive\\Twig\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "ZendTest\\Expressive\\Twig\\": "test/"
-        }
+        "docs": "https://docs.mezzio.dev/mezzio-twigrenderer/",
+        "issues": "https://github.com/mezzio/mezzio-twigrenderer/issues",
+        "source": "https://github.com/mezzio/mezzio-twigrenderer",
+        "rss": "https://github.com/mezzio/mezzio-twigrenderer/releases.atom",
+        "chat": "https://laminas.dev/chat",
+        "forum": "https://discourse.laminas.dev"
     },
     "config": {
         "sort-packages": true
@@ -54,8 +28,35 @@
             "dev-master": "2.1.x-dev",
             "dev-develop": "2.2.x-dev"
         },
-        "zf": {
-            "config-provider": "Zend\\Expressive\\Twig\\ConfigProvider"
+        "laminas": {
+            "config-provider": "Mezzio\\Twig\\ConfigProvider"
+        }
+    },
+    "require": {
+        "php": "^7.1",
+        "laminas/laminas-zendframework-bridge": "^1.0",
+        "mezzio/mezzio-helpers": "^5.0",
+        "mezzio/mezzio-router": "^3.0",
+        "mezzio/mezzio-template": "^2.0",
+        "psr/container": "^1.0",
+        "twig/twig": "^1.32 || ^2.1"
+    },
+    "require-dev": {
+        "laminas/laminas-coding-standard": "~1.0.0",
+        "malukenho/docheader": "^0.1.5",
+        "phpunit/phpunit": "^7.0.2"
+    },
+    "conflict": {
+        "container-interop/container-interop": "<1.2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mezzio\\Twig\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MezzioTest\\Twig\\": "test/"
         }
     },
     "scripts": {
@@ -69,5 +70,8 @@
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
         "license-check": "docheader check src/ test/"
+    },
+    "replace": {
+        "zendframework/zend-expressive-twigrenderer": "self.version"
     }
 }
