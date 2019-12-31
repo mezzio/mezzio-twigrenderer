@@ -1,23 +1,24 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
- * @copyright Copyright (c) 2015-2017 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-twigrenderer for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-twigrenderer/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-twigrenderer/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Expressive\Twig;
+namespace MezzioTest\Twig;
 
+use Mezzio\Helper\ServerUrlHelper;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplatePath;
+use Mezzio\Twig\TwigEnvironmentFactory;
+use Mezzio\Twig\TwigRenderer;
+use Mezzio\Twig\TwigRendererFactory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ProphecyInterface;
 use Psr\Container\ContainerInterface;
 use ReflectionProperty;
 use Twig_Environment as TwigEnvironment;
-use Zend\Expressive\Helper\ServerUrlHelper;
-use Zend\Expressive\Helper\UrlHelper;
-use Zend\Expressive\Template\TemplatePath;
-use Zend\Expressive\Twig\TwigEnvironmentFactory;
-use Zend\Expressive\Twig\TwigRenderer;
-use Zend\Expressive\Twig\TwigRendererFactory;
 
 class TwigRendererFactoryTest extends TestCase
 {
@@ -121,7 +122,9 @@ class TwigRendererFactoryTest extends TestCase
     {
         $this->container->has('config')->willReturn(false);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
         $environment = new TwigEnvironmentFactory();
         $this->container->has(TwigEnvironment::class)->willReturn(true);
         $this->container->get(TwigEnvironment::class)->willReturn(
@@ -157,7 +160,9 @@ class TwigRendererFactoryTest extends TestCase
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
         $environment = new TwigEnvironmentFactory();
         $this->container->has(TwigEnvironment::class)->willReturn(true);
         $this->container->get(TwigEnvironment::class)->willReturn(
@@ -179,7 +184,9 @@ class TwigRendererFactoryTest extends TestCase
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
         $environment = new TwigEnvironmentFactory();
         $this->container->has(TwigEnvironment::class)->willReturn(true);
         $this->container->get(TwigEnvironment::class)->willReturn(
@@ -209,7 +216,9 @@ class TwigRendererFactoryTest extends TestCase
     {
         $this->container->has('config')->willReturn(false);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
         $this->container->has(TwigEnvironment::class)->willReturn(false);
 
         $factory = new TwigRendererFactory();
