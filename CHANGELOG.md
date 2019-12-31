@@ -18,7 +18,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#11](https://github.com/zendframework/zend-expressive-twigrenderer/pull/11)
+- [zendframework/zend-expressive-twigrenderer#11](https://github.com/zendframework/zend-expressive-twigrenderer/pull/11)
   updates the `TwigExtension` class to implement `Twig_Extension_GlobalsInterface`,
   which is required starting with Twig 1.23 for forwards-compatibility.
 
@@ -26,14 +26,14 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#8](https://github.com/zendframework/zend-expressive-twigrenderer/pull/8)
+- [zendframework/zend-expressive-twigrenderer#8](https://github.com/zendframework/zend-expressive-twigrenderer/pull/8)
   adds `zendframework/zend-expressive-helpers` as a dependency, in order to
   consume its `UrlHelper` and `ServerUrlHelper` implementations.
 
   Adds the `url` and `absolute_url` twig functions to generate
   absolute urls for a route and path.
 
-- [#10](https://github.com/zendframework/zend-expressive-twigrenderer/pull/10)
+- [zendframework/zend-expressive-twigrenderer#10](https://github.com/zendframework/zend-expressive-twigrenderer/pull/10)
   adds config globals to pass to all twig templates.
 
   ```php
@@ -79,7 +79,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#9](https://github.com/zendframework/zend-expressive-twigrenderer/pull/9)
+- [zendframework/zend-expressive-twigrenderer#9](https://github.com/zendframework/zend-expressive-twigrenderer/pull/9)
   fixes a skipped test, and updates the behavior of `TwigRendererFactory` to
   raise an exception if the 'config' service is not an array or `ArrayObject`.
 
@@ -119,7 +119,7 @@ First stable release.
 
 ### Fixed
 
-- [#5](https://github.com/zendframework/zend-expressive-twigrenderer/pull/5)
+- [zendframework/zend-expressive-twigrenderer#5](https://github.com/zendframework/zend-expressive-twigrenderer/pull/5)
   fixes an issue in the TwigRendererFactory whereby it failed if the 'config'
   service returned an `ArrayObject`. It now validates that it has a usable
   config value, raising an exception when it does not.
@@ -128,7 +128,7 @@ First stable release.
 
 ### Added
 
-- [#1](https://github.com/zendframework/zend-expressive-twigrenderer/pull/1)
+- [zendframework/zend-expressive-twigrenderer#1](https://github.com/zendframework/zend-expressive-twigrenderer/pull/1)
   adds the ability to inject additional Twig extensions via configuration. This
   can be done using the following configuration:
 
@@ -154,7 +154,7 @@ First stable release.
 
 ### Deprecated
 
-- [#1](https://github.com/zendframework/zend-expressive-twigrenderer/pull/1)
+- [zendframework/zend-expressive-twigrenderer#1](https://github.com/zendframework/zend-expressive-twigrenderer/pull/1)
   deprecates usage of the `cache_dir` and `assets_*` sub-keys under the
   `templates` top-level key, in favor of positioning them beneath a `twig`
   top-level key. As `templates` and `twig` values are merged, however, this
@@ -166,9 +166,9 @@ First stable release.
 
 ### Fixed
 
-- [#4](https://github.com/zendframework/zend-expressive-twigrenderer/pull/4)
-  removes the dependency on zendframework/zend-expressive, and replaces it with
-  zend-framework/zend-expressive-template and
+- [zendframework/zend-expressive-twigrenderer#4](https://github.com/zendframework/zend-expressive-twigrenderer/pull/4)
+  removes the dependency on mezzio/mezzio, and replaces it with
+  laminas-framework/mezzio-template and
   zendframework/zend-expressive-router.
 
 ## 0.2.1 - 2015-11-10
@@ -187,7 +187,7 @@ First stable release.
 
 ### Fixed
 
-- [#3](https://github.com/zendframework/zend-expressive-twigrenderer/pull/3)
+- [zendframework/zend-expressive-twigrenderer#3](https://github.com/zendframework/zend-expressive-twigrenderer/pull/3)
   updates the `renderAssetUrl()` method of the `TwigExtension` to mask
   versioning if it's empty (while also allowing zero versions).
 
@@ -207,7 +207,7 @@ First stable release.
 
 ### Fixed
 
-- Updated to zend-expressive RC1.
+- Updated to mezzio RC1.
 - Added branch-alias of dev-master to 1.0-dev.
 
 ## 0.1.0 - 2015-10-10
