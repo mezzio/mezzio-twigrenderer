@@ -1,27 +1,26 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @see       https://github.com/zendframework/zend-expressive for the canonical source repository
- * @copyright Copyright (c) 2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-twigrenderer for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-twigrenderer/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-twigrenderer/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Expressive\Twig;
+namespace MezzioTest\Twig;
 
 use Interop\Container\ContainerInterface;
+use Mezzio\Helper\ServerUrlHelper;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplatePath;
+use Mezzio\Twig\Exception\InvalidConfigException;
+use Mezzio\Twig\Exception\InvalidExtensionException;
+use Mezzio\Twig\TwigExtension;
+use Mezzio\Twig\TwigRenderer;
+use Mezzio\Twig\TwigRendererFactory;
+use MezzioTest\Twig\TestAsset\Extension\BarTwigExtension;
+use MezzioTest\Twig\TestAsset\Extension\FooTwigExtension;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionProperty;
-use Zend\Expressive\Helper\ServerUrlHelper;
-use Zend\Expressive\Helper\UrlHelper;
-use Zend\Expressive\Template\TemplatePath;
-use Zend\Expressive\Twig\Exception\InvalidConfigException;
-use Zend\Expressive\Twig\Exception\InvalidExtensionException;
-use Zend\Expressive\Twig\TwigExtension;
-use Zend\Expressive\Twig\TwigRenderer;
-use Zend\Expressive\Twig\TwigRendererFactory;
-use ZendTest\Expressive\Twig\TestAsset\Extension\FooTwigExtension;
-use ZendTest\Expressive\Twig\TestAsset\Extension\BarTwigExtension;
 
 class TwigRendererFactoryTest extends TestCase
 {
@@ -105,7 +104,9 @@ class TwigRendererFactoryTest extends TestCase
     {
         $this->container->has('config')->willReturn(false);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
         $factory = new TwigRendererFactory();
         $twig = $factory($this->container->reveal());
         $this->assertInstanceOf(TwigRenderer::class, $twig);
@@ -128,7 +129,9 @@ class TwigRendererFactoryTest extends TestCase
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
         $factory = new TwigRendererFactory();
         $twig = $factory($this->container->reveal());
 
@@ -158,7 +161,9 @@ class TwigRendererFactoryTest extends TestCase
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
         $factory = new TwigRendererFactory();
         $twig = $factory($this->container->reveal());
 
@@ -180,7 +185,7 @@ class TwigRendererFactoryTest extends TestCase
         $twig = $factory($this->container->reveal());
 
         $environment = $this->fetchTwigEnvironment($twig);
-        $this->assertTrue($environment->hasExtension('zend-expressive'));
+        $this->assertTrue($environment->hasExtension('mezzio'));
     }
 
     public function testUsesAssetsConfigurationWhenAddingTwigExtension()
@@ -203,7 +208,7 @@ class TwigRendererFactoryTest extends TestCase
         $twig = $factory($this->container->reveal());
 
         $environment = $this->fetchTwigEnvironment($twig);
-        $extension = $environment->getExtension('zend-expressive');
+        $extension = $environment->getExtension('mezzio');
         $this->assertInstanceOf(TwigExtension::class, $extension);
         $this->assertAttributeEquals($config['templates']['assets_url'], 'assetsUrl', $extension);
         $this->assertAttributeEquals($config['templates']['assets_version'], 'assetsVersion', $extension);
@@ -221,7 +226,9 @@ class TwigRendererFactoryTest extends TestCase
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
         $factory = new TwigRendererFactory();
         $twig = $factory($this->container->reveal());
 
@@ -238,7 +245,9 @@ class TwigRendererFactoryTest extends TestCase
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
         $factory = new TwigRendererFactory();
         $twig = $factory($this->container->reveal());
 
@@ -274,7 +283,9 @@ class TwigRendererFactoryTest extends TestCase
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
         $this->container->has(BarTwigExtension::class)->willReturn(true);
         $this->container->get(BarTwigExtension::class)->willReturn(new BarTwigExtension());
         $factory = new TwigRendererFactory();
@@ -318,7 +329,9 @@ class TwigRendererFactoryTest extends TestCase
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
 
         if (is_string($extension)) {
             $this->container->has($extension)->willReturn(false);
@@ -352,7 +365,7 @@ class TwigRendererFactoryTest extends TestCase
         $twig = $factory($this->container->reveal());
 
         $environment = $this->fetchTwigEnvironment($twig);
-        $extension = $environment->getExtension('zend-expressive');
+        $extension = $environment->getExtension('mezzio');
         $this->assertInstanceOf(TwigExtension::class, $extension);
         $this->assertAttributeEquals($config['twig']['globals'], 'globals', $extension);
         $this->assertAttributeSame($serverUrlHelper, 'serverUrlHelper', $extension);
