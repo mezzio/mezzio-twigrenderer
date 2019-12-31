@@ -1,24 +1,25 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
- * @copyright Copyright (c) 2015-2017 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-twigrenderer for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-twigrenderer/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-twigrenderer/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace Zend\Expressive\Twig;
+namespace Mezzio\Twig;
 
 use LogicException;
+use Mezzio\Template\ArrayParametersTrait;
+use Mezzio\Template\DefaultParamsTrait;
+use Mezzio\Template\TemplatePath;
+use Mezzio\Template\TemplateRendererInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Loader\FilesystemLoader;
-use Zend\Expressive\Template\ArrayParametersTrait;
-use Zend\Expressive\Template\DefaultParamsTrait;
-use Zend\Expressive\Template\TemplatePath;
-use Zend\Expressive\Template\TemplateRendererInterface;
 
 use function is_string;
 use function preg_match;

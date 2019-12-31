@@ -1,24 +1,24 @@
-# Twig Integration for Expressive
+# Twig Integration for Mezzio
 
-[![Build Status](https://secure.travis-ci.org/zendframework/zend-expressive-twigrenderer.svg?branch=master)](https://secure.travis-ci.org/zendframework/zend-expressive-twigrenderer)
-[![Coverage Status](https://coveralls.io/repos/github/zendframework/zend-expressive-twigrenderer/badge.svg?branch=master)](https://coveralls.io/github/zendframework/zend-expressive-twigrenderer?branch=master)
+[![Build Status](https://travis-ci.org/mezzio/mezzio-twigrenderer.svg?branch=master)](https://travis-ci.org/mezzio/mezzio-twigrenderer)
+[![Coverage Status](https://coveralls.io/repos/github/mezzio/mezzio-twigrenderer/badge.svg?branch=master)](https://coveralls.io/github/mezzio/mezzio-twigrenderer?branch=master)
 
 Provides [Twig](http://twig.sensiolabs.org/) integration for
-[Expressive](https://docs.zendframework.com//zend-expressive/).
+[Mezzio](https://docs.laminas.dev//mezzio/).
 
 ## Installation
 
 Install this library using composer:
 
 ```bash
-$ composer require zendframework/zend-expressive-twigrenderer
+$ composer require mezzio/mezzio-twigrenderer
 ```
 We recommend using a dependency injection container, and typehint against
 [container-interop](https://github.com/container-interop/container-interop). We
 can recommend the following implementations:
 
-- [zend-servicemanager](https://github.com/zendframework/zend-servicemanager):
-  `composer require zendframework/zend-servicemanager`
+- [laminas-servicemanager](https://github.com/laminas/laminas-servicemanager):
+  `composer require laminas/laminas-servicemanager`
 - [pimple-interop](https://github.com/moufmouf/pimple-interop):
   `composer require mouf/pimple-interop`
 - [Aura.Di](https://github.com/auraphp/Aura.Di): `composer require aura/di`
@@ -26,8 +26,8 @@ can recommend the following implementations:
 ## Twig Extension
 
 The included Twig extension adds support for url generation. The extension is automatically activated if the
-[UrlHelper](https://github.com/zendframework/zend-expressive-helpers#urlhelper) and
-[ServerUrlHelper](https://github.com/zendframework/zend-expressive-helpers#serverurlhelper) 
+[UrlHelper](https://github.com/mezzio/mezzio-helpers#urlhelper) and
+[ServerUrlHelper](https://github.com/mezzio/mezzio-helpers#serverurlhelper) 
 are registered with the container.
 
 - ``path``: Render the relative path for a given route and parameters. If there
@@ -98,11 +98,11 @@ are registered with the container.
 
 ## Configuration
 
-If you use the [zend-component-installer](https://github.com/zendframework/zend-component-installer) 
+If you use the [laminas-component-installer](https://github.com/laminas/laminas-component-installer) 
 the factories are configured automatically for you when requiring this package
 with composer. Without the component installer, you need to 
 include the [`ConfigProvider`](src/ConfigProvider.php) in your 
-[`config/config.php`](https://github.com/zendframework/zend-expressive-skeleton/blob/master/config/config.php). 
+[`config/config.php`](https://github.com/mezzio/mezzio-skeleton/blob/master/config/config.php). 
 Optional configuration can be stored in `config/autoload/templates.global.php`.
 
 ```php
@@ -140,4 +140,4 @@ Optional configuration can be stored in `config/autoload/templates.global.php`.
 
 ## Documentation
 
-See the Expressive [Twig documentation](https://docs.zendframework.com/zend-expressive/features/template/twig/).
+See the Mezzio [Twig documentation](https://docs.mezzio.dev/mezzio/features/template/twig/).
