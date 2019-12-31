@@ -1,16 +1,19 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
- * @copyright Copyright (c) 2017-2018 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-twigrenderer for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-twigrenderer/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-twigrenderer/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace Zend\Expressive\Twig;
+namespace Mezzio\Twig;
 
 use ArrayObject;
 use DateTimeZone;
+use Mezzio\Helper\ServerUrlHelper;
+use Mezzio\Helper\UrlHelper;
 use Psr\Container\ContainerInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -20,8 +23,6 @@ use Twig\Extension\ExtensionInterface;
 use Twig\Loader\FilesystemLoader;
 use Twig\NodeVisitor\OptimizerNodeVisitor;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
-use Zend\Expressive\Helper\ServerUrlHelper;
-use Zend\Expressive\Helper\UrlHelper;
 
 use function get_class;
 use function gettype;
@@ -120,7 +121,7 @@ class TwigEnvironmentFactory
             $environment->getExtension(CoreExtension::class)->setTimezone($timezone);
         }
 
-        // Add expressive twig extension if requirements are met
+        // Add mezzio twig extension if requirements are met
         if ($container->has(TwigExtension::class)
             && $container->has(ServerUrlHelper::class)
             && $container->has(UrlHelper::class)
