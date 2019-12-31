@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#1](https://github.com/zendframework/zend-expressive-twigrenderer/pull/1)
+- [zendframework/zend-expressive-twigrenderer#1](https://github.com/zendframework/zend-expressive-twigrenderer/pull/1)
   adds the ability to inject additional Twig extensions via configuration. This
   can be done using the following configuration:
 
@@ -32,7 +32,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Deprecated
 
-- [#1](https://github.com/zendframework/zend-expressive-twigrenderer/pull/1)
+- [zendframework/zend-expressive-twigrenderer#1](https://github.com/zendframework/zend-expressive-twigrenderer/pull/1)
   deprecates usage of the `cache_dir` and `assets_*` sub-keys under the
   `templates` top-level key, in favor of positioning them beneath a `twig`
   top-level key. As `templates` and `twig` values are merged, however, this
@@ -44,9 +44,9 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#4](https://github.com/zendframework/zend-expressive-twigrenderer/pull/4)
-  removes the dependency on zendframework/zend-expressive, and replaces it with
-  zend-framework/zend-expressive-template and
+- [zendframework/zend-expressive-twigrenderer#4](https://github.com/zendframework/zend-expressive-twigrenderer/pull/4)
+  removes the dependency on mezzio/mezzio, and replaces it with
+  laminas-framework/mezzio-template and
   zendframework/zend-expressive-router.
 
 ## 0.2.1 - 2015-11-10
@@ -65,7 +65,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#3](https://github.com/zendframework/zend-expressive-twigrenderer/pull/3)
+- [zendframework/zend-expressive-twigrenderer#3](https://github.com/zendframework/zend-expressive-twigrenderer/pull/3)
   updates the `renderAssetUrl()` method of the `TwigExtension` to mask
   versioning if it's empty (while also allowing zero versions).
 
@@ -85,7 +85,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Updated to zend-expressive RC1.
+- Updated to mezzio RC1.
 - Added branch-alias of dev-master to 1.0-dev.
 
 ## 0.1.0 - 2015-10-10
