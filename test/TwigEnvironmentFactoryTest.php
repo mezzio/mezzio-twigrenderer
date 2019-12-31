@@ -1,28 +1,29 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-twigrenderer for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-twigrenderer/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-twigrenderer/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace ZendTest\Expressive\Twig;
+namespace MezzioTest\Twig;
 
 use DateTimeZone;
+use Mezzio\Helper\ServerUrlHelper;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Twig\Exception\InvalidConfigException;
+use Mezzio\Twig\Exception\InvalidExtensionException;
+use Mezzio\Twig\Exception\InvalidRuntimeLoaderException;
+use Mezzio\Twig\TwigEnvironmentFactory;
+use Mezzio\Twig\TwigExtension;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ProphecyInterface;
 use Psr\Container\ContainerInterface;
 use Twig_Environment as TwigEnvironment;
 use Twig_Extension_Core as TwigExtensionCore;
 use Twig_RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
-use Zend\Expressive\Helper\ServerUrlHelper;
-use Zend\Expressive\Helper\UrlHelper;
-use Zend\Expressive\Twig\Exception\InvalidConfigException;
-use Zend\Expressive\Twig\Exception\InvalidExtensionException;
-use Zend\Expressive\Twig\Exception\InvalidRuntimeLoaderException;
-use Zend\Expressive\Twig\TwigEnvironmentFactory;
-use Zend\Expressive\Twig\TwigExtension;
 
 class TwigEnvironmentFactoryTest extends TestCase
 {
@@ -40,7 +41,9 @@ class TwigEnvironmentFactoryTest extends TestCase
     {
         $this->container->has('config')->willReturn(false);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container->reveal());
 
@@ -55,7 +58,9 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container->reveal());
 
@@ -83,7 +88,9 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container->reveal());
 
@@ -164,7 +171,9 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
 
         if (is_string($extension)) {
             $this->container->has($extension)->willReturn(false);
@@ -247,7 +256,9 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
         $factory = new TwigEnvironmentFactory();
         $environment = $factory($this->container->reveal());
         $fetchedTz = $environment->getExtension(TwigExtensionCore::class)->getTimezone();
@@ -265,7 +276,9 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
         $factory = new TwigEnvironmentFactory();
 
         $this->expectException(InvalidConfigException::class);
@@ -304,7 +317,9 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
 
         if (is_string($runtimeLoader)) {
             $this->container->has($runtimeLoader)->willReturn(false);
@@ -338,7 +353,9 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
         $this->container->has('Test\Runtime\BarRuntimeLoader')->willReturn(true);
         $this->container->get('Test\Runtime\BarRuntimeLoader')->willReturn($barRuntime->reveal());
 
