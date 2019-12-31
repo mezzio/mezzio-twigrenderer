@@ -1,22 +1,23 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
- * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-twigrenderer for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-twigrenderer/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-twigrenderer/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace ZendTest\Expressive\Twig;
+namespace MezzioTest\Twig;
 
+use Mezzio\Helper\ServerUrlHelper;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Twig\Exception\InvalidConfigException;
+use Mezzio\Twig\TwigExtension;
+use Mezzio\Twig\TwigExtensionFactory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ProphecyInterface;
 use Psr\Container\ContainerInterface;
-use Zend\Expressive\Helper\ServerUrlHelper;
-use Zend\Expressive\Helper\UrlHelper;
-use Zend\Expressive\Twig\Exception\InvalidConfigException;
-use Zend\Expressive\Twig\TwigExtension;
-use Zend\Expressive\Twig\TwigExtensionFactory;
 
 use function sprintf;
 
@@ -47,6 +48,7 @@ class TwigExtensionFactoryTest extends TestCase
     public function testRaisesExceptionForMissingServerUrlHelper()
     {
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
 
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(sprintf(
@@ -62,6 +64,7 @@ class TwigExtensionFactoryTest extends TestCase
     {
         $this->container->has(ServerUrlHelper::class)->willReturn(true);
         $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
 
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(sprintf(
