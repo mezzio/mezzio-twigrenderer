@@ -13,7 +13,7 @@
     ],
     "homepage": "https://mezzio.dev",
     "support": {
-        "docs": "https://docs.mezzio.dev/mezzio-twigrenderer/",
+        "docs": "https://docs.mezzio.dev/mezzio/features/template/twig/",
         "issues": "https://github.com/mezzio/mezzio-twigrenderer/issues",
         "source": "https://github.com/mezzio/mezzio-twigrenderer",
         "rss": "https://github.com/mezzio/mezzio-twigrenderer/releases.atom",
