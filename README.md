@@ -1,6 +1,6 @@
 # Twig Integration for Mezzio
 
-[![Build Status](https://travis-ci.org/mezzio/mezzio-twigrenderer.svg?branch=master)](https://travis-ci.org/mezzio/mezzio-twigrenderer)
+[![Build Status](https://travis-ci.com/mezzio/mezzio-twigrenderer.svg?branch=master)](https://travis-ci.com/mezzio/mezzio-twigrenderer)
 [![Coverage Status](https://coveralls.io/repos/github/mezzio/mezzio-twigrenderer/badge.svg?branch=master)](https://coveralls.io/github/mezzio/mezzio-twigrenderer?branch=master)
 
 Provides [Twig](http://twig.sensiolabs.org/) integration for
