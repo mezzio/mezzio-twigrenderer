@@ -43,8 +43,12 @@ class TwigExtensionFactory
         $config = TwigRendererFactory::mergeConfig($config);
 
         return new TwigExtension(
-            $container->has(ServerUrlHelper::class) ? $container->get(ServerUrlHelper::class) : $container->get(\Zend\Expressive\Helper\ServerUrlHelper::class),
-            $container->has(UrlHelper::class) ? $container->get(UrlHelper::class) : $container->get(\Zend\Expressive\Helper\UrlHelper::class),
+            $container->has(ServerUrlHelper::class)
+                ? $container->get(ServerUrlHelper::class)
+                : $container->get(\Zend\Expressive\Helper\ServerUrlHelper::class),
+            $container->has(UrlHelper::class)
+                ? $container->get(UrlHelper::class)
+                : $container->get(\Zend\Expressive\Helper\UrlHelper::class),
             $config['assets_url'] ?? '',
             $config['assets_version'] ?? '',
             $config['globals'] ?? []
