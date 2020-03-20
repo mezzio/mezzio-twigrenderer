@@ -6,11 +6,11 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- [#3](https://github.com/mezzio/mezzio-twigrenderer/pull/3) adds support for PHP 7.4.
 
 ### Changed
 
-- Nothing.
+- [#3](https://github.com/mezzio/mezzio-twigrenderer/pull/3) updates minimum Twig dependency to `^1.42.5 || ^2.12.5 || ^3.0.3`.
 
 ### Deprecated
 
