@@ -39,12 +39,13 @@
         "mezzio/mezzio-router": "^3.0",
         "mezzio/mezzio-template": "^2.0",
         "psr/container": "^1.0",
-        "twig/twig": "^1.34 || ^2.4 || ^3.0"
+        "twig/twig": "^1.42.5 || ^2.12.5 || ^3.0.3"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~1.0.0",
         "malukenho/docheader": "^0.1.5",
-        "phpunit/phpunit": "^7.5.17 || ^8.4.3"
+        "phpspec/prophecy": "^1.10.3",
+        "phpunit/phpunit": "^7.5.20 || ^8.5.2"
     },
     "conflict": {
         "container-interop/container-interop": "<1.2.0"
