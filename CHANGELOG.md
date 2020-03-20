@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 2.6.0 - TBD
+## 2.6.0 - 2020-03-20
 
 ### Added
 
@@ -11,28 +11,6 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Changed
 
 - [#3](https://github.com/mezzio/mezzio-twigrenderer/pull/3) updates minimum Twig dependency to `^1.42.5 || ^2.12.5 || ^3.0.3`.
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
-
-### Fixed
-
-- Nothing.
-
-## 2.5.1 - TBD
-
-### Added
-
-- Nothing.
-
-### Changed
-
-- Nothing.
 
 ### Deprecated
 
