@@ -73,6 +73,6 @@
         "license-check": "docheader check src/ test/"
     },
     "replace": {
-        "zendframework/zend-expressive-twigrenderer": "self.version"
+        "zendframework/zend-expressive-twigrenderer": "^2.5.0"
     }
 }
