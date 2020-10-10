@@ -27,9 +27,9 @@ class TwigExtensionFunctionsRenderTest extends TestCase
 
     protected function setUp() : void
     {
-        $this->twigLoader      = $this->prophesize(LoaderInterface::class);
-        $this->serverUrlHelper = $this->prophesize(ServerUrlHelper::class);
-        $this->urlHelper       = $this->prophesize(UrlHelper::class);
+        $this->twigLoader      = $this->createMock(LoaderInterface::class);
+        $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createMock(UrlHelper::class);
 
         $this->templates = [
             'template' => "{{ path('route') }}",
@@ -47,8 +47,8 @@ class TwigExtensionFunctionsRenderTest extends TestCase
 
         $twig = new Environment($loader, ['debug' => true, 'cache' => false]);
         $twig->addExtension(new TwigExtension(
-            $this->serverUrlHelper->reveal(),
-            $this->urlHelper->reveal(),
+            $this->serverUrlHelper,
+            $this->urlHelper,
             $assetsUrl,
             $assetsVersion
         ));
@@ -78,7 +78,10 @@ class TwigExtensionFunctionsRenderTest extends TestCase
             'template' => $template,
         ];
 
-        $this->urlHelper->generate($route, $routeParams, $queryParams, $fragment, $options)->willReturn('PATH');
+        $this->urlHelper
+            ->method('generate')
+            ->with($route, $routeParams, $queryParams, $fragment, $options)
+            ->willReturn('PATH');
         $twig = $this->getTwigEnvironment();
 
         $this->assertSame('PATH', $twig->render('template'));
@@ -145,8 +148,14 @@ class TwigExtensionFunctionsRenderTest extends TestCase
             'template' => $template,
         ];
 
-        $this->urlHelper->generate($route, $routeParams, $queryParams, $fragment, $options)->willReturn('PATH');
-        $this->serverUrlHelper->generate('PATH')->willReturn('HOST/PATH');
+        $this->urlHelper
+            ->method('generate')
+            ->with($route, $routeParams, $queryParams, $fragment, $options)
+            ->willReturn('PATH');
+        $this->serverUrlHelper
+            ->method('generate')
+            ->with('PATH')
+            ->willReturn('HOST/PATH');
         $twig = $this->getTwigEnvironment();
 
         $this->assertSame('HOST/PATH', $twig->render('template'));
@@ -204,7 +213,11 @@ class TwigExtensionFunctionsRenderTest extends TestCase
             'template' => "{{ absolute_url('path/to/something') }}",
         ];
 
-        $this->serverUrlHelper->generate('path/to/something')->willReturn('HOST/PATH');
+        $this->serverUrlHelper
+            ->method('generate')
+            ->with('path/to/something')
+            ->willReturn('HOST/PATH');
+
         $twig = $this->getTwigEnvironment();
 
         $this->assertSame('HOST/PATH', $twig->render('template'));

@@ -29,7 +29,7 @@
         }
     },
     "require": {
-        "php": "^7.1",
+        "php": "^7.3 || ~8.0.0",
         "laminas/laminas-zendframework-bridge": "^1.0",
         "mezzio/mezzio-helpers": "^5.0",
         "mezzio/mezzio-router": "^3.0",
@@ -40,8 +40,7 @@
     "require-dev": {
         "laminas/laminas-coding-standard": "~1.0.0",
         "malukenho/docheader": "^0.1.5",
-        "phpspec/prophecy": "^1.10.3",
-        "phpunit/phpunit": "^7.5.20 || ^8.5.2"
+        "phpunit/phpunit": "^9.3"
     },
     "conflict": {
         "container-interop/container-interop": "<1.2.0"

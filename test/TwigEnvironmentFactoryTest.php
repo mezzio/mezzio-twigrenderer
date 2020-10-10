@@ -19,8 +19,8 @@ use Mezzio\Twig\Exception\InvalidRuntimeLoaderException;
 use Mezzio\Twig\TwigEnvironmentFactory;
 use Mezzio\Twig\TwigExtension;
 use Mezzio\Twig\TwigExtensionFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ProphecyInterface;
 use Psr\Container\ContainerInterface;
 use Twig\Environment as TwigEnvironment;
 use Twig\Extension\CoreExtension;
@@ -33,26 +33,32 @@ use function is_string;
 class TwigEnvironmentFactoryTest extends TestCase
 {
     /**
-     * @var ContainerInterface|ProphecyInterface
+     * @var ContainerInterface|MockObject
      */
     private $container;
 
     protected function setUp() : void
     {
-        $this->container = $this->prophesize(ContainerInterface::class);
+        $this->container = $this->createMock(ContainerInterface::class);
     }
 
     public function testCallingFactoryWithNoConfigReturnsTwigEnvironmentInstance()
     {
-        $this->container->has('config')->willReturn(false);
-        $this->container->has(TwigExtension::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Twig\TwigExtension::class)->willReturn(false);
-        $this->container->has(ServerUrlHelper::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
-        $this->container->has(UrlHelper::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
+        $this->container
+            ->expects($this->any())
+            ->method('has')
+            ->willReturnMap([
+                ['config', false],
+                [TwigExtension::class, false],
+                [\Zend\Expressive\Twig\TwigExtension::class, false],
+                [ServerUrlHelper::class, false],
+                [\Zend\Expressive\Helper\ServerUrlHelper::class, false],
+                [UrlHelper::class, false],
+                [\Zend\Expressive\Helper\UrlHelper::class, false],
+            ]);
+
         $factory     = new TwigEnvironmentFactory();
-        $environment = $factory($this->container->reveal());
+        $environment = $factory($this->container);
 
         $this->assertInstanceOf(TwigEnvironment::class, $environment);
 
@@ -62,16 +68,29 @@ class TwigEnvironmentFactoryTest extends TestCase
     public function testUsesDebugConfiguration()
     {
         $config = ['debug' => true];
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn($config);
-        $this->container->has(TwigExtension::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Twig\TwigExtension::class)->willReturn(false);
-        $this->container->has(ServerUrlHelper::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
-        $this->container->has(UrlHelper::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
+
+        $this->container
+            ->expects($this->any())
+            ->method('has')
+            ->willReturnMap([
+                ['config', true],
+                [TwigExtension::class, false],
+                [\Zend\Expressive\Twig\TwigExtension::class, false],
+                [ServerUrlHelper::class, false],
+                [\Zend\Expressive\Helper\ServerUrlHelper::class, false],
+                [UrlHelper::class, false],
+                [\Zend\Expressive\Helper\UrlHelper::class, false],
+            ]);
+
+        $this->container
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnMap([
+                ['config', $config],
+            ]);
+
         $factory     = new TwigEnvironmentFactory();
-        $environment = $factory($this->container->reveal());
+        $environment = $factory($this->container);
 
         $this->assertTrue($environment->isDebug());
         $this->assertFalse($environment->getCache());
@@ -94,34 +113,63 @@ class TwigEnvironmentFactoryTest extends TestCase
     public function testCanSpecifyCacheDirectoryViaConfiguration()
     {
         $config = ['templates' => ['cache_dir' => __DIR__]];
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn($config);
-        $this->container->has(TwigExtension::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Twig\TwigExtension::class)->willReturn(false);
-        $this->container->has(ServerUrlHelper::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
-        $this->container->has(UrlHelper::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
+
+        $this->container
+            ->expects($this->any())
+            ->method('has')
+            ->willReturnMap([
+                ['config', true],
+                [TwigExtension::class, false],
+                [\Zend\Expressive\Twig\TwigExtension::class, false],
+                [ServerUrlHelper::class, false],
+                [\Zend\Expressive\Helper\ServerUrlHelper::class, false],
+                [UrlHelper::class, false],
+                [\Zend\Expressive\Helper\UrlHelper::class, false],
+            ]);
+
+        $this->container
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnMap([
+                ['config', $config],
+            ]);
+
         $factory     = new TwigEnvironmentFactory();
-        $environment = $factory($this->container->reveal());
+        $environment = $factory($this->container);
 
         $this->assertEquals($config['templates']['cache_dir'], $environment->getCache());
     }
 
     public function testAddsTwigExtensionIfRouterIsInContainer()
     {
-        $twigExtensionFactory = new TwigExtensionFactory();
-        $serverUrlHelper = $this->prophesize(ServerUrlHelper::class)->reveal();
-        $urlHelper       = $this->prophesize(UrlHelper::class)->reveal();
-        $this->container->has('config')->willReturn(false);
-        $this->container->has(ServerUrlHelper::class)->willReturn(true);
-        $this->container->get(ServerUrlHelper::class)->willReturn($serverUrlHelper);
-        $this->container->has(UrlHelper::class)->willReturn(true);
-        $this->container->get(UrlHelper::class)->willReturn($urlHelper);
-        $this->container->has(TwigExtension::class)->willReturn(true);
-        $this->container->get(TwigExtension::class)->willReturn($twigExtensionFactory($this->container->reveal()));
+        $serverUrlHelper = $this->createMock(ServerUrlHelper::class);
+        $urlHelper       = $this->createMock(UrlHelper::class);
+
+        $this->container
+            ->expects($this->any())
+            ->method('has')
+            ->willReturnMap([
+                ['config', false],
+                [TwigExtension::class, true],
+                [ServerUrlHelper::class, true],
+                [UrlHelper::class, true],
+            ]);
+
+        $this->container
+            ->expects($this->any())
+            ->method('get')
+            ->withConsecutive([TwigExtension::class], [ServerUrlHelper::class], [UrlHelper::class])
+            ->willReturnOnConsecutiveCalls(
+                $this->returnCallback(function () {
+                    $twigExtensionFactory = new TwigExtensionFactory();
+                    return $twigExtensionFactory($this->container);
+                }),
+                $serverUrlHelper,
+                $urlHelper
+            );
+
         $factory     = new TwigEnvironmentFactory();
-        $environment = $factory($this->container->reveal());
+        $environment = $factory($this->container);
 
         $this->assertTrue($environment->hasExtension(TwigExtension::class));
     }
@@ -155,23 +203,32 @@ class TwigEnvironmentFactoryTest extends TestCase
                 'extensions' => [$extension],
             ],
         ];
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn($config);
-        $this->container->has(TwigExtension::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Twig\TwigExtension::class)->willReturn(false);
-        $this->container->has(ServerUrlHelper::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
-        $this->container->has(UrlHelper::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
 
-        if (is_string($extension)) {
-            $this->container->has($extension)->willReturn(false);
-        }
+        $this->container
+            ->expects($this->any())
+            ->method('has')
+            ->willReturnMap([
+                ['config', true],
+                [TwigExtension::class, false],
+                [\Zend\Expressive\Twig\TwigExtension::class, false],
+                [ServerUrlHelper::class, false],
+                [\Zend\Expressive\Helper\ServerUrlHelper::class, false],
+                [UrlHelper::class, false],
+                [\Zend\Expressive\Helper\UrlHelper::class, false],
+                [$extension, false],
+            ]);
+
+        $this->container
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnMap([
+                ['config', $config],
+            ]);
 
         $factory = new TwigEnvironmentFactory();
 
         $this->expectException(InvalidExtensionException::class);
-        $factory($this->container->reveal());
+        $factory($this->container);
     }
 
     public function invalidConfiguration()
@@ -197,13 +254,13 @@ class TwigEnvironmentFactoryTest extends TestCase
      */
     public function testRaisesExceptionForInvalidConfigService($config, $contains)
     {
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn($config);
+        $this->container->method('has')->with('config')->willReturn(true);
+        $this->container->method('get')->with('config')->willReturn($config);
         $factory = new TwigEnvironmentFactory();
 
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage($contains);
-        $factory($this->container->reveal());
+        $factory($this->container);
     }
 
     public function testUsesTimezoneConfiguration()
@@ -214,16 +271,29 @@ class TwigEnvironmentFactoryTest extends TestCase
                 'timezone' => $tz,
             ],
         ];
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn($config);
-        $this->container->has(TwigExtension::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Twig\TwigExtension::class)->willReturn(false);
-        $this->container->has(ServerUrlHelper::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
-        $this->container->has(UrlHelper::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
+
+        $this->container
+            ->expects($this->any())
+            ->method('has')
+            ->willReturnMap([
+                ['config', true],
+                [TwigExtension::class, false],
+                [\Zend\Expressive\Twig\TwigExtension::class, false],
+                [ServerUrlHelper::class, false],
+                [\Zend\Expressive\Helper\ServerUrlHelper::class, false],
+                [UrlHelper::class, false],
+                [\Zend\Expressive\Helper\UrlHelper::class, false],
+            ]);
+
+        $this->container
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnMap([
+                ['config', $config],
+            ]);
+
         $factory = new TwigEnvironmentFactory();
-        $environment = $factory($this->container->reveal());
+        $environment = $factory($this->container);
         $fetchedTz = $environment->getExtension(CoreExtension::class)->getTimezone();
         $this->assertEquals(new DateTimeZone($tz), $fetchedTz);
     }
@@ -236,18 +306,31 @@ class TwigEnvironmentFactoryTest extends TestCase
                 'timezone' => $tz,
             ],
         ];
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn($config);
-        $this->container->has(TwigExtension::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Twig\TwigExtension::class)->willReturn(false);
-        $this->container->has(ServerUrlHelper::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
-        $this->container->has(UrlHelper::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
+
+        $this->container
+            ->expects($this->any())
+            ->method('has')
+            ->willReturnMap([
+                ['config', true],
+                [TwigExtension::class, false],
+                [\Zend\Expressive\Twig\TwigExtension::class, false],
+                [ServerUrlHelper::class, false],
+                [\Zend\Expressive\Helper\ServerUrlHelper::class, false],
+                [UrlHelper::class, false],
+                [\Zend\Expressive\Helper\UrlHelper::class, false],
+            ]);
+
+        $this->container
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnMap([
+                ['config', $config],
+            ]);
+
         $factory = new TwigEnvironmentFactory();
 
         $this->expectException(InvalidConfigException::class);
-        $factory($this->container->reveal());
+        $factory($this->container);
     }
 
     public function testRaisesExceptionForNonStringTimezone()
@@ -257,14 +340,14 @@ class TwigEnvironmentFactoryTest extends TestCase
                 'timezone' => new DateTimeZone('UTC'),
             ],
         ];
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn($config);
+        $this->container->method('has')->with('config')->willReturn(true);
+        $this->container->method('get')->with('config')->willReturn($config);
         $factory = new TwigEnvironmentFactory();
 
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('"timezone" configuration value must be a string');
 
-        $factory($this->container->reveal());
+        $factory($this->container);
     }
 
     public function invalidRuntimeLoaders()
@@ -296,32 +379,41 @@ class TwigEnvironmentFactoryTest extends TestCase
                 'runtime_loaders' => [$runtimeLoader],
             ],
         ];
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn($config);
-        $this->container->has(TwigExtension::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Twig\TwigExtension::class)->willReturn(false);
-        $this->container->has(ServerUrlHelper::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
-        $this->container->has(UrlHelper::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
 
-        if (is_string($runtimeLoader)) {
-            $this->container->has($runtimeLoader)->willReturn(false);
-        }
+        $this->container
+            ->expects($this->any())
+            ->method('has')
+            ->willReturnMap([
+                ['config', true],
+                [TwigExtension::class, false],
+                [\Zend\Expressive\Twig\TwigExtension::class, false],
+                [ServerUrlHelper::class, false],
+                [\Zend\Expressive\Helper\ServerUrlHelper::class, false],
+                [UrlHelper::class, false],
+                [\Zend\Expressive\Helper\UrlHelper::class, false],
+                [$runtimeLoader, false]
+            ]);
+
+        $this->container
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnMap([
+                ['config', $config],
+            ]);
 
         $factory = new TwigEnvironmentFactory();
 
         $this->expectException(InvalidRuntimeLoaderException::class);
-        $factory($this->container->reveal());
+        $factory($this->container);
     }
 
     public function testInjectsCustomRuntimeLoadersIntoTwigEnvironment()
     {
-        $fooRuntime = $this->prophesize(RuntimeLoaderInterface::class);
+        $fooRuntime = $this->createMock(RuntimeLoaderInterface::class);
         $fooRuntime->load('Test\Runtime\FooRuntime')->willReturn('foo-runtime');
         $fooRuntime->load('Test\Runtime\BarRuntime')->willReturn(null);
 
-        $barRuntime = $this->prophesize(RuntimeLoaderInterface::class);
+        $barRuntime = $this->createMock(RuntimeLoaderInterface::class);
         $barRuntime->load('Test\Runtime\BarRuntime')->willReturn('bar-runtime');
         $barRuntime->load('Test\Runtime\FooRuntime')->willReturn(null);
 
@@ -329,24 +421,36 @@ class TwigEnvironmentFactoryTest extends TestCase
             'templates' => [],
             'twig' => [
                 'runtime_loaders' => [
-                    $fooRuntime->reveal(),
+                    $fooRuntime,
                     'Test\Runtime\BarRuntimeLoader',
                 ],
             ],
         ];
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn($config);
-        $this->container->has(TwigExtension::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Twig\TwigExtension::class)->willReturn(false);
-        $this->container->has(ServerUrlHelper::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)->willReturn(false);
-        $this->container->has(UrlHelper::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Helper\UrlHelper::class)->willReturn(false);
-        $this->container->has('Test\Runtime\BarRuntimeLoader')->willReturn(true);
-        $this->container->get('Test\Runtime\BarRuntimeLoader')->willReturn($barRuntime->reveal());
+
+        $this->container
+            ->expects($this->any())
+            ->method('has')
+            ->willReturnMap([
+                ['config', true],
+                [TwigExtension::class, false],
+                [\Zend\Expressive\Twig\TwigExtension::class, false],
+                [ServerUrlHelper::class, false],
+                [\Zend\Expressive\Helper\ServerUrlHelper::class, false],
+                [UrlHelper::class, false],
+                [\Zend\Expressive\Helper\UrlHelper::class, false],
+                ['Test\Runtime\BarRuntimeLoader', true]
+            ]);
+
+        $this->container
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnMap([
+                ['config', $config],
+                ['Test\Runtime\BarRuntimeLoader', $barRuntime]
+            ]);
 
         $factory = new TwigEnvironmentFactory();
-        $environment = $factory($this->container->reveal());
+        $environment = $factory($this->container);
 
         $this->assertInstanceOf(TwigEnvironment::class, $environment);
         $this->assertEquals('bar-runtime', $environment->getRuntime('Test\Runtime\BarRuntime'));
@@ -360,12 +464,25 @@ class TwigEnvironmentFactoryTest extends TestCase
                 'optimizations' => 0,
             ]
         ];
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn($config);
-        $this->container->has(TwigExtension::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Twig\TwigExtension::class)->willReturn(false);
+
+        $this->container
+            ->expects($this->any())
+            ->method('has')
+            ->willReturnMap([
+                ['config', true],
+                [TwigExtension::class, false],
+                [\Zend\Expressive\Twig\TwigExtension::class, false],
+            ]);
+
+        $this->container
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnMap([
+                ['config', $config],
+            ]);
+
         $factory     = new TwigEnvironmentFactory();
-        $environment = $factory($this->container->reveal());
+        $environment = $factory($this->container);
 
         $extension = $environment->getExtension(OptimizerExtension::class);
         $property = new \ReflectionProperty($extension, 'optimizers');
@@ -382,12 +499,24 @@ class TwigEnvironmentFactoryTest extends TestCase
             ]
         ];
 
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn($config);
-        $this->container->has(TwigExtension::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Twig\TwigExtension::class)->willReturn(false);
+        $this->container
+            ->expects($this->any())
+            ->method('has')
+            ->willReturnMap([
+                ['config', true],
+                [TwigExtension::class, false],
+                [\Zend\Expressive\Twig\TwigExtension::class, false],
+            ]);
+
+        $this->container
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnMap([
+                ['config', $config],
+            ]);
+
         $factory     = new TwigEnvironmentFactory();
-        $environment = $factory($this->container->reveal());
+        $environment = $factory($this->container);
         $extension = $environment->getExtension(EscaperExtension::class);
         $this->assertFalse($extension->getDefaultStrategy('template::name'));
     }
@@ -401,13 +530,24 @@ class TwigEnvironmentFactoryTest extends TestCase
             ],
         ];
 
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn($config);
-        $this->container->has(TwigExtension::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Twig\TwigExtension::class)->willReturn(false);
+        $this->container
+            ->expects($this->any())
+            ->method('has')
+            ->willReturnMap([
+                ['config', true],
+                [TwigExtension::class, false],
+                [\Zend\Expressive\Twig\TwigExtension::class, false],
+            ]);
+
+        $this->container
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnMap([
+                ['config', $config],
+            ]);
 
         $factory = new TwigEnvironmentFactory();
-        $environment = $factory($this->container->reveal());
+        $environment = $factory($this->container);
 
         $this->assertFalse($environment->isAutoReload());
         $this->assertTrue($environment->isDebug());
@@ -422,13 +562,24 @@ class TwigEnvironmentFactoryTest extends TestCase
             ],
         ];
 
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn($config);
-        $this->container->has(TwigExtension::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Twig\TwigExtension::class)->willReturn(false);
+        $this->container
+            ->expects($this->any())
+            ->method('has')
+            ->willReturnMap([
+                ['config', true],
+                [TwigExtension::class, false],
+                [\Zend\Expressive\Twig\TwigExtension::class, false],
+            ]);
+
+        $this->container
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnMap([
+                ['config', $config],
+            ]);
 
         $factory = new TwigEnvironmentFactory();
-        $environment = $factory($this->container->reveal());
+        $environment = $factory($this->container);
 
         $this->assertTrue($environment->isAutoReload());
         $this->assertFalse($environment->isDebug());

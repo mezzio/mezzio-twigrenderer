@@ -13,31 +13,31 @@ namespace MezzioTest\Twig;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Twig\TwigExtension;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ProphecyInterface;
 use Twig\TwigFunction;
 
 use function sprintf;
 
 class TwigExtensionTest extends TestCase
 {
-    /** @var ServerUrlHelper|ProphecyInterface */
+    /** @var ServerUrlHelper|MockObject */
     private $serverUrlHelper;
 
-    /** @var UrlHelper|ProphecyInterface */
+    /** @var UrlHelper|MockObject */
     private $urlHelper;
 
     protected function setUp() : void
     {
-        $this->serverUrlHelper = $this->prophesize(ServerUrlHelper::class);
-        $this->urlHelper = $this->prophesize(UrlHelper::class);
+        $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
+        $this->urlHelper = $this->createMock(UrlHelper::class);
     }
 
     public function createExtension($assetsUrl, $assetsVersion)
     {
         return new TwigExtension(
-            $this->serverUrlHelper->reveal(),
-            $this->urlHelper->reveal(),
+            $this->serverUrlHelper,
+            $this->urlHelper,
             $assetsUrl,
             $assetsVersion
         );
@@ -100,22 +100,34 @@ class TwigExtensionTest extends TestCase
 
     public function testRenderUriDelegatesToComposedUrlHelper()
     {
-        $this->urlHelper->generate('foo', ['id' => 1], [], null, [])->willReturn('URL');
+        $this->urlHelper
+            ->method('generate')
+            ->with('foo', ['id' => 1], [], null, [])
+            ->willReturn('URL');
         $extension = $this->createExtension('', '');
         $this->assertSame('URL', $extension->renderUri('foo', ['id' => 1]));
     }
 
     public function testRenderUrlDelegatesToComposedUrlHelperAndServerUrlHelper()
     {
-        $this->urlHelper->generate('foo', ['id' => 1], [], null, [])->willReturn('PATH');
-        $this->serverUrlHelper->generate('PATH')->willReturn('HOST/PATH');
+        $this->urlHelper
+            ->method('generate')
+            ->with('foo', ['id' => 1], [], null, [])
+            ->willReturn('PATH');
+        $this->serverUrlHelper
+            ->method('generate')
+            ->with('PATH')
+            ->willReturn('HOST/PATH');
         $extension = $this->createExtension('', '');
         $this->assertSame('HOST/PATH', $extension->renderUrl('foo', ['id' => 1]));
     }
 
     public function testRenderUrlFromPathDelegatesToComposedServerUrlHelper()
     {
-        $this->serverUrlHelper->generate('PATH')->willReturn('HOST/PATH');
+        $this->serverUrlHelper
+            ->method('generate')
+            ->with('PATH')
+            ->willReturn('HOST/PATH');
         $extension = $this->createExtension('', '');
         $this->assertSame('HOST/PATH', $extension->renderUrlFromPath('PATH'));
     }
