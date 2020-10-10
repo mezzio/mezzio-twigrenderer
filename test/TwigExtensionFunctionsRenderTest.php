@@ -25,7 +25,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
     protected $serverUrlHelper;
     protected $urlHelper;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->twigLoader      = $this->createMock(LoaderInterface::class);
         $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
@@ -87,10 +87,10 @@ class TwigExtensionFunctionsRenderTest extends TestCase
         $this->assertSame('PATH', $twig->render('template'));
     }
 
-    public function renderPathProvider()
+    public function renderPathProvider(): array
     {
         return [
-            'path'                => [
+            'path'                   => [
                 "{{ path('route', {'foo': 'bar'}) }}",
                 'route',
                 ['foo' => 'bar'],
@@ -98,7 +98,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
                 null,
                 [],
             ],
-            'path-query'          => [
+            'path-query'             => [
                 "{{ path('path-query', {'id': '3'}, {'foo': 'bar'}) }}",
                 'path-query',
                 ['id' => 3],
@@ -106,7 +106,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
                 null,
                 [],
             ],
-            'path-query-fragment' => [
+            'path-query-fragment'    => [
                 "{{ path('path-query-fragment', {'foo': 'bar'}, {'qux': 'quux'}, 'corge') }}",
                 'path-query-fragment',
                 ['foo' => 'bar'],
@@ -114,7 +114,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
                 'corge',
                 [],
             ],
-            'path-reuse-result' => [
+            'path-reuse-result'      => [
                 "{{ path('path-query-fragment', {}, {}, null, {'reuse_result_params': true}) }}",
                 'path-query-fragment',
                 [],
@@ -161,10 +161,10 @@ class TwigExtensionFunctionsRenderTest extends TestCase
         $this->assertSame('HOST/PATH', $twig->render('template'));
     }
 
-    public function renderUrlProvider()
+    public function renderUrlProvider(): array
     {
         return [
-            'path'                => [
+            'path'                   => [
                 "{{ url('route', {'foo': 'bar'}) }}",
                 'route',
                 ['foo' => 'bar'],
@@ -172,7 +172,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
                 null,
                 [],
             ],
-            'path-query'          => [
+            'path-query'             => [
                 "{{ url('path-query', {'id': '3'}, {'foo': 'bar'}) }}",
                 'path-query',
                 ['id' => 3],
@@ -180,7 +180,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
                 null,
                 [],
             ],
-            'path-query-fragment' => [
+            'path-query-fragment'    => [
                 "{{ url('path-query-fragment', {'foo': 'bar'}, {'qux': 'quux'}, 'corge') }}",
                 'path-query-fragment',
                 ['foo' => 'bar'],
@@ -188,7 +188,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
                 'corge',
                 [],
             ],
-            'path-reuse-result' => [
+            'path-reuse-result'      => [
                 "{{ url('path-query-fragment', {}, {}, null, {'reuse_result_params': true}) }}",
                 'path-query-fragment',
                 [],

@@ -22,27 +22,24 @@ use Mezzio\Twig\TwigExtensionFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use ReflectionProperty;
 use Twig\Environment as TwigEnvironment;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\Extension\OptimizerExtension;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
-use function is_string;
-
 class TwigEnvironmentFactoryTest extends TestCase
 {
-    /**
-     * @var ContainerInterface|MockObject
-     */
+    /** @var ContainerInterface|MockObject */
     private $container;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->container = $this->createMock(ContainerInterface::class);
     }
 
-    public function testCallingFactoryWithNoConfigReturnsTwigEnvironmentInstance()
+    public function testCallingFactoryWithNoConfigReturnsTwigEnvironmentInstance(): TwigEnvironment
     {
         $this->container
             ->expects($this->any())
@@ -100,8 +97,6 @@ class TwigEnvironmentFactoryTest extends TestCase
 
     /**
      * @depends testCallingFactoryWithNoConfigReturnsTwigEnvironmentInstance
-     *
-     * @param TwigEnvironment $environment
      */
     public function testDebugDisabledSetsUpEnvironmentForProduction(TwigEnvironment $environment)
     {
@@ -174,7 +169,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->assertTrue($environment->hasExtension(TwigExtension::class));
     }
 
-    public function invalidExtensions()
+    public function invalidExtensions(): array
     {
         return [
             'null'                  => [null],
@@ -192,7 +187,6 @@ class TwigEnvironmentFactoryTest extends TestCase
 
     /**
      * @dataProvider invalidExtensions
-     *
      * @param mixed $extension
      */
     public function testRaisesExceptionForInvalidExtensions($extension)
@@ -231,7 +225,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $factory($this->container);
     }
 
-    public function invalidConfiguration()
+    public function invalidConfiguration(): array
     {
         //                        [Config value, Type]
         return [
@@ -248,8 +242,7 @@ class TwigEnvironmentFactoryTest extends TestCase
 
     /**
      * @dataProvider invalidConfiguration
-     *
-     * @param mixed $config
+     * @param mixed  $config
      * @param string $contains
      */
     public function testRaisesExceptionForInvalidConfigService($config, $contains)
@@ -265,7 +258,7 @@ class TwigEnvironmentFactoryTest extends TestCase
 
     public function testUsesTimezoneConfiguration()
     {
-        $tz = DateTimeZone::listIdentifiers()[0];
+        $tz     = DateTimeZone::listIdentifiers()[0];
         $config = [
             'twig' => [
                 'timezone' => $tz,
@@ -292,15 +285,15 @@ class TwigEnvironmentFactoryTest extends TestCase
                 ['config', $config],
             ]);
 
-        $factory = new TwigEnvironmentFactory();
+        $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container);
-        $fetchedTz = $environment->getExtension(CoreExtension::class)->getTimezone();
+        $fetchedTz   = $environment->getExtension(CoreExtension::class)->getTimezone();
         $this->assertEquals(new DateTimeZone($tz), $fetchedTz);
     }
 
     public function testRaisesExceptionForInvalidTimezone()
     {
-        $tz = 'Luna/Copernicus_Crater';
+        $tz     = 'Luna/Copernicus_Crater';
         $config = [
             'twig' => [
                 'timezone' => $tz,
@@ -350,7 +343,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $factory($this->container);
     }
 
-    public function invalidRuntimeLoaders()
+    public function invalidRuntimeLoaders(): array
     {
         return [
             'null'                  => [null],
@@ -368,14 +361,13 @@ class TwigEnvironmentFactoryTest extends TestCase
 
     /**
      * @dataProvider invalidRuntimeLoaders
-     *
      * @param mixed $runtimeLoader
      */
     public function testRaisesExceptionForInvalidRuntimeLoaders($runtimeLoader)
     {
         $config = [
             'templates' => [],
-            'twig' => [
+            'twig'      => [
                 'runtime_loaders' => [$runtimeLoader],
             ],
         ];
@@ -391,7 +383,7 @@ class TwigEnvironmentFactoryTest extends TestCase
                 [\Zend\Expressive\Helper\ServerUrlHelper::class, false],
                 [UrlHelper::class, false],
                 [\Zend\Expressive\Helper\UrlHelper::class, false],
-                [$runtimeLoader, false]
+                [$runtimeLoader, false],
             ]);
 
         $this->container
@@ -410,16 +402,26 @@ class TwigEnvironmentFactoryTest extends TestCase
     public function testInjectsCustomRuntimeLoadersIntoTwigEnvironment()
     {
         $fooRuntime = $this->createMock(RuntimeLoaderInterface::class);
-        $fooRuntime->load('Test\Runtime\FooRuntime')->willReturn('foo-runtime');
-        $fooRuntime->load('Test\Runtime\BarRuntime')->willReturn(null);
+        $fooRuntime
+            ->expects($this->any())
+            ->method('load')
+            ->willReturnMap([
+                ['Test\Runtime\FooRuntime', 'foo-runtime'],
+                ['Test\Runtime\BarRuntime', null],
+            ]);
 
         $barRuntime = $this->createMock(RuntimeLoaderInterface::class);
-        $barRuntime->load('Test\Runtime\BarRuntime')->willReturn('bar-runtime');
-        $barRuntime->load('Test\Runtime\FooRuntime')->willReturn(null);
+        $barRuntime
+            ->expects($this->any())
+            ->method('load')
+            ->willReturnMap([
+                ['Test\Runtime\BarRuntime', 'bar-runtime'],
+                ['Test\Runtime\FooRuntime', null],
+            ]);
 
         $config = [
             'templates' => [],
-            'twig' => [
+            'twig'      => [
                 'runtime_loaders' => [
                     $fooRuntime,
                     'Test\Runtime\BarRuntimeLoader',
@@ -438,7 +440,7 @@ class TwigEnvironmentFactoryTest extends TestCase
                 [\Zend\Expressive\Helper\ServerUrlHelper::class, false],
                 [UrlHelper::class, false],
                 [\Zend\Expressive\Helper\UrlHelper::class, false],
-                ['Test\Runtime\BarRuntimeLoader', true]
+                ['Test\Runtime\BarRuntimeLoader', true],
             ]);
 
         $this->container
@@ -446,10 +448,10 @@ class TwigEnvironmentFactoryTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['config', $config],
-                ['Test\Runtime\BarRuntimeLoader', $barRuntime]
+                ['Test\Runtime\BarRuntimeLoader', $barRuntime],
             ]);
 
-        $factory = new TwigEnvironmentFactory();
+        $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container);
 
         $this->assertInstanceOf(TwigEnvironment::class, $environment);
@@ -462,7 +464,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $config = [
             'twig' => [
                 'optimizations' => 0,
-            ]
+            ],
         ];
 
         $this->container
@@ -485,7 +487,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $environment = $factory($this->container);
 
         $extension = $environment->getExtension(OptimizerExtension::class);
-        $property = new \ReflectionProperty($extension, 'optimizers');
+        $property  = new ReflectionProperty($extension, 'optimizers');
         $property->setAccessible(true);
 
         $this->assertSame(0, $property->getValue($extension));
@@ -496,7 +498,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $config = [
             'twig' => [
                 'autoescape' => false,
-            ]
+            ],
         ];
 
         $this->container
@@ -517,7 +519,7 @@ class TwigEnvironmentFactoryTest extends TestCase
 
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container);
-        $extension = $environment->getExtension(EscaperExtension::class);
+        $extension   = $environment->getExtension(EscaperExtension::class);
         $this->assertFalse($extension->getDefaultStrategy('template::name'));
     }
 
@@ -546,7 +548,7 @@ class TwigEnvironmentFactoryTest extends TestCase
                 ['config', $config],
             ]);
 
-        $factory = new TwigEnvironmentFactory();
+        $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container);
 
         $this->assertFalse($environment->isAutoReload());
@@ -578,7 +580,7 @@ class TwigEnvironmentFactoryTest extends TestCase
                 ['config', $config],
             ]);
 
-        $factory = new TwigEnvironmentFactory();
+        $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container);
 
         $this->assertTrue($environment->isAutoReload());

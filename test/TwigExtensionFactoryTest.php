@@ -23,22 +23,16 @@ use function sprintf;
 
 class TwigExtensionFactoryTest extends TestCase
 {
-    /**
-     * @var ContainerInterface|MockObject
-     */
+    /** @var ContainerInterface|MockObject */
     private $container;
 
-    /**
-     * @var ServerUrlHelper|MockObject
-     */
+    /** @var ServerUrlHelper|MockObject */
     private $serverUrlHelper;
 
-    /**
-     * @var UrlHelper|MockObject
-     */
+    /** @var UrlHelper|MockObject */
     private $urlHelper;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->container       = $this->createMock(ContainerInterface::class);
         $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);

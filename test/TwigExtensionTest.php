@@ -19,6 +19,9 @@ use Twig\TwigFunction;
 
 use function sprintf;
 
+/**
+ * phpcs:disable WebimpressCodingStandard.Functions.Param.MissingSpecification
+ */
 class TwigExtensionTest extends TestCase
 {
     /** @var ServerUrlHelper|MockObject */
@@ -27,13 +30,13 @@ class TwigExtensionTest extends TestCase
     /** @var UrlHelper|MockObject */
     private $urlHelper;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
-        $this->urlHelper = $this->createMock(UrlHelper::class);
+        $this->urlHelper       = $this->createMock(UrlHelper::class);
     }
 
-    public function createExtension($assetsUrl, $assetsVersion)
+    public function createExtension($assetsUrl, $assetsVersion): TwigExtension
     {
         return new TwigExtension(
             $this->serverUrlHelper,
@@ -43,6 +46,7 @@ class TwigExtensionTest extends TestCase
         );
     }
 
+    /** @return object|bool */
     public function findFunction($name, array $functions)
     {
         foreach ($functions as $function) {
@@ -147,7 +151,7 @@ class TwigExtensionTest extends TestCase
         );
     }
 
-    public function emptyAssetVersions()
+    public function emptyAssetVersions(): array
     {
         return [
             'null'         => [null],
@@ -157,7 +161,6 @@ class TwigExtensionTest extends TestCase
 
     /**
      * @dataProvider emptyAssetVersions
-     *
      * @param null|string $emptyValue
      */
     public function testRenderAssetUrlWithoutProvidedVersion($emptyValue)
@@ -169,7 +172,7 @@ class TwigExtensionTest extends TestCase
         );
     }
 
-    public function zeroAssetVersions()
+    public function zeroAssetVersions(): array
     {
         return [
             'zero'        => [0],
@@ -179,7 +182,6 @@ class TwigExtensionTest extends TestCase
 
     /**
      * @dataProvider zeroAssetVersions
-     *
      * @param int|string $zeroValue
      */
     public function testRendersZeroVersionAssetUrl($zeroValue)

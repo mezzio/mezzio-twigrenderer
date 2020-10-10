@@ -30,25 +30,24 @@ use function sprintf;
 
 use const E_USER_DEPRECATED;
 
+/**
+ * phpcs:disable WebimpressCodingStandard.Functions.Param.MissingSpecification
+ */
 class TwigRendererFactoryTest extends TestCase
 {
-    /**
-     * @var ContainerInterface|MockObject
-     */
+    /** @var ContainerInterface|MockObject */
     private $container;
 
-    /**
-     * @var callable
-     */
+    /** @var callable */
     private $errorHandler;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->restoreErrorHandler();
         $this->container = $this->createMock(ContainerInterface::class);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $this->restoreErrorHandler();
     }
@@ -61,7 +60,7 @@ class TwigRendererFactoryTest extends TestCase
         }
     }
 
-    public function fetchTwigEnvironment(TwigRenderer $twig)
+    public function fetchTwigEnvironment(TwigRenderer $twig): Environment
     {
         $r = new ReflectionProperty($twig, 'template');
         $r->setAccessible(true);
@@ -69,7 +68,7 @@ class TwigRendererFactoryTest extends TestCase
         return $r->getValue($twig);
     }
 
-    public function getConfigurationPaths()
+    public function getConfigurationPaths(): array
     {
         return [
             'foo' => __DIR__ . '/TestAsset/bar',
@@ -128,7 +127,7 @@ class TwigRendererFactoryTest extends TestCase
         $this->assertContains($expected, $found, $message);
     }
 
-    public function testCallingFactoryWithNoConfigReturnsTwigInstance()
+    public function testCallingFactoryWithNoConfigReturnsTwigInstance(): TwigRenderer
     {
         $this->container
             ->expects($this->any())
@@ -158,8 +157,6 @@ class TwigRendererFactoryTest extends TestCase
 
     /**
      * @depends testCallingFactoryWithNoConfigReturnsTwigInstance
-     *
-     * @param TwigRenderer $twig
      */
     public function testUnconfiguredTwigInstanceContainsNoPaths(TwigRenderer $twig)
     {
@@ -263,16 +260,16 @@ class TwigRendererFactoryTest extends TestCase
         $config = [
             'templates' => [
                 'extension' => 'file extension used by templates; defaults to html.twig',
-                'paths' => [],
+                'paths'     => [],
             ],
-            'twig' => [
-                'cache_dir' => 'path to cached templates',
-                'assets_url' => 'base URL for assets',
-                'assets_version' => 'base version for assets',
-                'extensions' => [],
+            'twig'      => [
+                'cache_dir'       => 'path to cached templates',
+                'assets_url'      => 'base URL for assets',
+                'assets_version'  => 'base version for assets',
+                'extensions'      => [],
                 'runtime_loaders' => [],
-                'globals' => ['ga_tracking' => 'UA-XXXXX-X'],
-                'timezone' => 'default timezone identifier, e.g.: America/New_York',
+                'globals'         => ['ga_tracking' => 'UA-XXXXX-X'],
+                'timezone'        => 'default timezone identifier, e.g.: America/New_York',
             ],
         ];
 

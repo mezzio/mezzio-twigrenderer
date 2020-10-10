@@ -19,9 +19,10 @@ use function sprintf;
 
 class TwigExtensionFactory
 {
-    public function __invoke(ContainerInterface $container) : TwigExtension
+    public function __invoke(ContainerInterface $container): TwigExtension
     {
-        if (! $container->has(ServerUrlHelper::class)
+        if (
+            ! $container->has(ServerUrlHelper::class)
             && ! $container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)
         ) {
             throw new InvalidConfigException(sprintf(
@@ -30,7 +31,8 @@ class TwigExtensionFactory
             ));
         }
 
-        if (! $container->has(UrlHelper::class)
+        if (
+            ! $container->has(UrlHelper::class)
             && ! $container->has(\Zend\Expressive\Helper\UrlHelper::class)
         ) {
             throw new InvalidConfigException(sprintf(

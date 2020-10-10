@@ -18,36 +18,25 @@ use Twig\TwigFunction;
 
 /**
  * Twig extension for rendering URLs and assets URLs from Mezzio.
- *
- * @author Geert Eltink (https://xtreamwayz.com)
  */
 class TwigExtension extends AbstractExtension implements GlobalsInterface
 {
-    /**
-     * @var ServerUrlHelper
-     */
+    /** @var ServerUrlHelper */
     private $serverUrlHelper;
 
-    /**
-     * @var UrlHelper
-     */
+    /** @var UrlHelper */
     private $urlHelper;
 
-    /**
-     * @var null|string
-     */
+    /** @var null|string */
     private $assetsUrl;
 
-    /**
-     * @var null|string|int
-     */
+    /** @var null|string|int */
     private $assetsVersion;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $globals;
 
+    /** @param null|string|int $assetsVersion */
     public function __construct(
         ServerUrlHelper $serverUrlHelper,
         UrlHelper $urlHelper,
@@ -62,7 +51,7 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
         $this->globals         = $globals;
     }
 
-    public function getGlobals() : array
+    public function getGlobals(): array
     {
         return $this->globals;
     }
@@ -70,7 +59,7 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
     /**
      * @return TwigFunction[]
      */
-    public function getFunctions() : array
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('absolute_url', [$this, 'renderUrlFromPath']),
@@ -89,15 +78,9 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
      * Usage: {{ path('article_show', {'id': '3'}, {'foo': 'bar'}, 'fragment') }}
      * Generates: /article/3?foo=bar#fragment
      *
-     * @param null|string $route
-     * @param array       $routeParams
-     * @param array       $queryParams
-     * @param null|string $fragmentIdentifier
-     * @param array       $options Can have the following keys:
-     *                             - reuse_result_params (bool): indicates if the current
-     *                             RouteResult parameters will be used, defaults to true
-     *
-     * @return string
+     * @param array $options Can have the following keys:
+     *                       - reuse_result_params (bool): indicates if the current
+     *                       RouteResult parameters will be used, defaults to true
      */
     public function renderUri(
         ?string $route = null,
@@ -106,7 +89,6 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
         ?string $fragmentIdentifier = null,
         array $options = []
     ): string {
-
         return $this->urlHelper->generate($route, $routeParams, $queryParams, $fragmentIdentifier, $options);
     }
 
@@ -119,15 +101,9 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
      * Usage: {{ url('article_show', {'id': '3'}, {'foo': 'bar'}, 'fragment') }}
      * Generates: http://example.com/article/3?foo=bar#fragment
      *
-     * @param null|string $route
-     * @param array       $routeParams
-     * @param array       $queryParams
-     * @param null|string $fragmentIdentifier
-     * @param array       $options Can have the following keys:
-     *                             - reuse_result_params (bool): indicates if the current
-     *                             RouteResult parameters will be used, defaults to true
-     *
-     * @return string
+     * @param array $options Can have the following keys:
+     *                       - reuse_result_params (bool): indicates if the current
+     *                       RouteResult parameters will be used, defaults to true
      */
     public function renderUrl(
         ?string $route = null,
@@ -136,7 +112,6 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
         ?string $fragmentIdentifier = null,
         array $options = []
     ): string {
-
         return $this->serverUrlHelper->generate(
             $this->renderUri($route, $routeParams, $queryParams, $fragmentIdentifier, $options)
         );
@@ -147,12 +122,8 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
      *
      * Usage: {{ absolute_url('path/to/something') }}
      * Generates: http://example.com/path/to/something
-     *
-     * @param string|null $path
-     *
-     * @return string
      */
-    public function renderUrlFromPath(string $path = null) : string
+    public function renderUrlFromPath(?string $path = null): string
     {
         return $this->serverUrlHelper->generate($path);
     }
@@ -162,13 +133,8 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
      *
      * Usage: {{ asset('path/to/asset/name.ext', version=3) }}
      * Generates: path/to/asset/name.ext?v=3
-     *
-     * @param string      $path
-     * @param string|null $version
-     *
-     * @return string
      */
-    public function renderAssetUrl(string $path, string $version = null) : string
+    public function renderAssetUrl(string $path, ?string $version = null): string
     {
         $assetsVersion = $version !== null && $version !== '' ? $version : $this->assetsVersion;
 

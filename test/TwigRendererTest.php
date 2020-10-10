@@ -24,19 +24,18 @@ use function str_replace;
 use function uniqid;
 use function var_export;
 
+/**
+ * phpcs:disable WebimpressCodingStandard.Functions.Param.MissingSpecification
+ */
 class TwigRendererTest extends TestCase
 {
-    /**
-     * @var FilesystemLoader
-     */
+    /** @var FilesystemLoader */
     private $twigFilesystem;
 
-    /**
-     * @var Environment
-     */
+    /** @var Environment */
     private $twigEnvironment;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->twigFilesystem  = new FilesystemLoader();
         $this->twigEnvironment = new Environment($this->twigFilesystem);
@@ -72,7 +71,8 @@ class TwigRendererTest extends TestCase
     public function assertEqualTemplatePath(TemplatePath $expected, TemplatePath $received, $message = null)
     {
         $message = $message ?: 'Failed to assert TemplatePaths are equal';
-        if ($expected->getPath() !== $received->getPath()
+        if (
+            $expected->getPath() !== $received->getPath()
             || $expected->getNamespace() !== $received->getNamespace()
         ) {
             $this->fail($message);
@@ -121,15 +121,15 @@ class TwigRendererTest extends TestCase
     {
         $renderer = new TwigRenderer();
         $renderer->addPath(__DIR__ . '/TestAsset');
-        $name = 'Twig';
-        $result = $renderer->render('twig.html', [ 'name' => $name ]);
+        $name   = 'Twig';
+        $result = $renderer->render('twig.html', ['name' => $name]);
         $this->assertStringContainsString($name, $result);
         $content = file_get_contents(__DIR__ . '/TestAsset/twig.html');
         $content = str_replace('{{ name }}', $name, $content);
         $this->assertEquals($content, $result);
     }
 
-    public function invalidParameterValues()
+    public function invalidParameterValues(): array
     {
         return [
             'true'       => [true],
@@ -144,7 +144,6 @@ class TwigRendererTest extends TestCase
 
     /**
      * @dataProvider invalidParameterValues
-     *
      * @param mixed $params
      */
     public function testRenderRaisesExceptionForInvalidParameterTypes($params)
@@ -158,12 +157,12 @@ class TwigRendererTest extends TestCase
     {
         $renderer = new TwigRenderer();
         $renderer->addPath(__DIR__ . '/TestAsset');
-        $result = $renderer->render('twig-null.html', null);
+        $result  = $renderer->render('twig-null.html', null);
         $content = file_get_contents(__DIR__ . '/TestAsset/twig-null.html');
         $this->assertEquals($content, $result);
     }
 
-    public function objectParameterValues()
+    public function objectParameterValues(): array
     {
         $names = [
             'stdClass'    => uniqid(),
@@ -178,7 +177,6 @@ class TwigRendererTest extends TestCase
 
     /**
      * @dataProvider objectParameterValues
-     *
      * @param object $params
      * @param string $search
      */
@@ -240,12 +238,12 @@ class TwigRendererTest extends TestCase
         $renderer->addPath(__DIR__ . '/TestAsset');
         $name = 'Twig';
         $renderer->addDefaultParam($renderer::TEMPLATE_ALL, 'name', $name);
-        $result = $renderer->render('twig');
+        $result  = $renderer->render('twig');
         $content = file_get_contents(__DIR__ . '/TestAsset/twig.html');
         $content = str_replace('{{ name }}', $name, $content);
         $this->assertEquals($content, $result);
 
-        $result = $renderer->render('twig-2');
+        $result  = $renderer->render('twig-2');
         $content = file_get_contents(__DIR__ . '/TestAsset/twig-2.html');
         $content = str_replace('{{ name }}', $name, $content);
         $this->assertEquals($content, $result);
@@ -255,16 +253,16 @@ class TwigRendererTest extends TestCase
     {
         $renderer = new TwigRenderer();
         $renderer->addPath(__DIR__ . '/TestAsset');
-        $name = 'Twig';
+        $name  = 'Twig';
         $name2 = 'Template';
         $renderer->addDefaultParam($renderer::TEMPLATE_ALL, 'name', $name);
         $renderer->addDefaultParam('twig-2', 'name', $name2);
-        $result = $renderer->render('twig');
+        $result  = $renderer->render('twig');
         $content = file_get_contents(__DIR__ . '/TestAsset/twig.html');
         $content = str_replace('{{ name }}', $name, $content);
         $this->assertEquals($content, $result);
 
-        $result = $renderer->render('twig-2');
+        $result  = $renderer->render('twig-2');
         $content = file_get_contents(__DIR__ . '/TestAsset/twig-2.html');
         $content = str_replace('{{ name }}', $name2, $content);
         $this->assertEquals($content, $result);
@@ -274,10 +272,10 @@ class TwigRendererTest extends TestCase
     {
         $renderer = new TwigRenderer();
         $renderer->addPath(__DIR__ . '/TestAsset');
-        $name = 'Twig';
+        $name  = 'Twig';
         $name2 = 'Template';
         $renderer->addDefaultParam($renderer::TEMPLATE_ALL, 'name', $name);
-        $result = $renderer->render('twig', ['name' => $name2]);
+        $result  = $renderer->render('twig', ['name' => $name2]);
         $content = file_get_contents(__DIR__ . '/TestAsset/twig.html');
         $content = str_replace('{{ name }}', $name2, $content);
         $this->assertEquals($content, $result);
