@@ -34,22 +34,14 @@ class TwigRenderer implements TemplateRendererInterface
     use ArrayParametersTrait;
     use DefaultParamsTrait;
 
-    /**
-     * @var string
-     */
+    /** @var FilesystemLoader */
+    protected $twigLoader;
+    /** @var Environment */
+    protected $template;
+    /** @var string */
     private $suffix;
 
-    /**
-     * @var FilesystemLoader
-     */
-    protected $twigLoader;
-
-    /**
-     * @var Environment
-     */
-    protected $template;
-
-    public function __construct(Environment $template = null, string $suffix = 'html')
+    public function __construct(?Environment $template = null, string $suffix = 'html')
     {
         if (null === $template) {
             $template = $this->createTemplate($this->getDefaultLoader());
@@ -69,12 +61,8 @@ class TwigRenderer implements TemplateRendererInterface
 
     /**
      * Create a default Twig environment
-     *
-     * @param FilesystemLoader $loader
-     *
-     * @return Environment
      */
-    private function createTemplate(FilesystemLoader $loader) : Environment
+    private function createTemplate(FilesystemLoader $loader): Environment
     {
         return new Environment($loader);
     }
@@ -82,7 +70,7 @@ class TwigRenderer implements TemplateRendererInterface
     /**
      * Get the default loader for template
      */
-    private function getDefaultLoader() : FilesystemLoader
+    private function getDefaultLoader(): FilesystemLoader
     {
         return new FilesystemLoader();
     }
@@ -90,20 +78,17 @@ class TwigRenderer implements TemplateRendererInterface
     /**
      * Render
      *
-     * @param string       $name
      * @param array|object $params
-     *
-     * @return string
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    public function render(string $name, $params = []) : string
+    public function render(string $name, $params = []): string
     {
         // Merge parameters based on requested template name
         $params = $this->mergeParams($name, $this->normalizeParams($params));
 
-        $name   = $this->normalizeTemplate($name);
+        $name = $this->normalizeTemplate($name);
 
         // Merge parameters based on normalized template name
         $params = $this->mergeParams($name, $params);
@@ -112,14 +97,27 @@ class TwigRenderer implements TemplateRendererInterface
     }
 
     /**
-     * Add a path for template
+     * Normalize namespaced template.
      *
-     * @param string      $path
-     * @param string|null $namespace
+     * Normalizes templates in the format "namespace::template" to
+     * "@namespace/template".
+     */
+    public function normalizeTemplate(string $template): string
+    {
+        $template = preg_replace('#^([^:]+)::(.*)$#', '@$1/$2', $template);
+        if (! preg_match('#\.[a-z]+$#i', $template)) {
+            return sprintf('%s.%s', $template, $this->suffix);
+        }
+
+        return $template;
+    }
+
+    /**
+     * Add a path for template
      *
      * @throws LoaderError
      */
-    public function addPath(string $path, string $namespace = null) : void
+    public function addPath(string $path, ?string $namespace = null): void
     {
         $namespace = $namespace ?: FilesystemLoader::MAIN_NAMESPACE;
         $this->twigLoader->addPath($path, $namespace);
@@ -130,36 +128,16 @@ class TwigRenderer implements TemplateRendererInterface
      *
      * @return TemplatePath[]
      */
-    public function getPaths() : array
+    public function getPaths(): array
     {
         $paths = [];
         foreach ($this->twigLoader->getNamespaces() as $namespace) {
-            $name = ($namespace !== FilesystemLoader::MAIN_NAMESPACE) ? $namespace : null;
+            $name = $namespace !== FilesystemLoader::MAIN_NAMESPACE ? $namespace : null;
 
             foreach ($this->twigLoader->getPaths($namespace) as $path) {
                 $paths[] = new TemplatePath($path, $name);
             }
         }
         return $paths;
-    }
-
-    /**
-     * Normalize namespaced template.
-     *
-     * Normalizes templates in the format "namespace::template" to
-     * "@namespace/template".
-     *
-     * @param string $template
-     *
-     * @return string
-     */
-    public function normalizeTemplate(string $template) : string
-    {
-        $template = preg_replace('#^([^:]+)::(.*)$#', '@$1/$2', $template);
-        if (! preg_match('#\.[a-z]+$#i', $template)) {
-            return sprintf('%s.%s', $template, $this->suffix);
-        }
-
-        return $template;
     }
 }

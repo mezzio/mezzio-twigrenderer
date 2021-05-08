@@ -19,24 +19,30 @@ use function sprintf;
 
 class TwigExtensionFactory
 {
-    public function __invoke(ContainerInterface $container) : TwigExtension
+    public function __invoke(ContainerInterface $container): TwigExtension
     {
-        if (! $container->has(ServerUrlHelper::class)
+        if (
+            ! $container->has(ServerUrlHelper::class)
             && ! $container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)
         ) {
-            throw new InvalidConfigException(sprintf(
-                'Missing required `%s` dependency.',
-                ServerUrlHelper::class
-            ));
+            throw new InvalidConfigException(
+                sprintf(
+                    'Missing required `%s` dependency.',
+                    ServerUrlHelper::class
+                )
+            );
         }
 
-        if (! $container->has(UrlHelper::class)
+        if (
+            ! $container->has(UrlHelper::class)
             && ! $container->has(\Zend\Expressive\Helper\UrlHelper::class)
         ) {
-            throw new InvalidConfigException(sprintf(
-                'Missing required `%s` dependency.',
-                UrlHelper::class
-            ));
+            throw new InvalidConfigException(
+                sprintf(
+                    'Missing required `%s` dependency.',
+                    UrlHelper::class
+                )
+            );
         }
 
         $config = $container->has('config') ? $container->get('config') : [];

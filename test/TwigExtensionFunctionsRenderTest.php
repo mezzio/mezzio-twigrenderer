@@ -13,58 +13,58 @@ namespace MezzioTest\Twig;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Twig\TwigExtension;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
 
 class TwigExtensionFunctionsRenderTest extends TestCase
 {
+    /** @var string[] */
     protected $templates;
+    /** @var MockObject<LoaderInterface> */
     protected $twigLoader;
+    /** @var MockObject<ServerUrlHelper> */
     protected $serverUrlHelper;
+    /** @var MockObject<UrlHelper> */
     protected $urlHelper;
 
-    protected function setUp() : void
-    {
-        $this->twigLoader      = $this->prophesize(LoaderInterface::class);
-        $this->serverUrlHelper = $this->prophesize(ServerUrlHelper::class);
-        $this->urlHelper       = $this->prophesize(UrlHelper::class);
-
-        $this->templates = [
-            'template' => "{{ path('route') }}",
-        ];
-    }
-
-    /**
-     * @param string $assetsUrl
-     * @param string $assetsVersion
-     * @return Environment
-     */
-    protected function getTwigEnvironment($assetsUrl = '', $assetsVersion = '')
-    {
-        $loader = new ArrayLoader($this->templates);
-
-        $twig = new Environment($loader, ['debug' => true, 'cache' => false]);
-        $twig->addExtension(new TwigExtension(
-            $this->serverUrlHelper->reveal(),
-            $this->urlHelper->reveal(),
-            $assetsUrl,
-            $assetsVersion
-        ));
-
-        return $twig;
-    }
-
-    public function testEnvironmentCreation()
+    public function testEnvironmentCreation(): void
     {
         $twig = $this->getTwigEnvironment();
 
         $this->assertInstanceOf(Environment::class, $twig);
     }
 
+    protected function getTwigEnvironment(string $assetsUrl = '', string $assetsVersion = ''): Environment
+    {
+        $loader = new ArrayLoader($this->templates);
+
+        $twig = new Environment($loader, ['debug' => true, 'cache' => false]);
+        $twig->addExtension(
+            new TwigExtension(
+                $this->serverUrlHelper,
+                $this->urlHelper,
+                $assetsUrl,
+                $assetsVersion
+            )
+        );
+
+        return $twig;
+    }
+
     /**
      * @dataProvider renderPathProvider
+     * @param array $routeParams
+     * @param array $queryParams
+     * @param array $options
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function testPathFunction(
         string $template,
@@ -73,21 +73,29 @@ class TwigExtensionFunctionsRenderTest extends TestCase
         array $queryParams,
         ?string $fragment,
         array $options
-    ) {
+    ): void {
         $this->templates = [
             'template' => $template,
         ];
-
-        $this->urlHelper->generate($route, $routeParams, $queryParams, $fragment, $options)->willReturn('PATH');
+        $this->urlHelper->expects(self::once())->method('generate')->with(
+            $route,
+            $routeParams,
+            $queryParams,
+            $fragment,
+            $options
+        )->willReturn('PATH');
         $twig = $this->getTwigEnvironment();
 
         $this->assertSame('PATH', $twig->render('template'));
     }
 
-    public function renderPathProvider()
+    /**
+     * @return array<string, array<mixed>>
+     */
+    public function renderPathProvider(): array
     {
         return [
-            'path'                => [
+            'path'                   => [
                 "{{ path('route', {'foo': 'bar'}) }}",
                 'route',
                 ['foo' => 'bar'],
@@ -95,7 +103,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
                 null,
                 [],
             ],
-            'path-query'          => [
+            'path-query'             => [
                 "{{ path('path-query', {'id': '3'}, {'foo': 'bar'}) }}",
                 'path-query',
                 ['id' => 3],
@@ -103,7 +111,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
                 null,
                 [],
             ],
-            'path-query-fragment' => [
+            'path-query-fragment'    => [
                 "{{ path('path-query-fragment', {'foo': 'bar'}, {'qux': 'quux'}, 'corge') }}",
                 'path-query-fragment',
                 ['foo' => 'bar'],
@@ -111,7 +119,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
                 'corge',
                 [],
             ],
-            'path-reuse-result' => [
+            'path-reuse-result'      => [
                 "{{ path('path-query-fragment', {}, {}, null, {'reuse_result_params': true}) }}",
                 'path-query-fragment',
                 [],
@@ -132,6 +140,12 @@ class TwigExtensionFunctionsRenderTest extends TestCase
 
     /**
      * @dataProvider renderUrlProvider
+     * @param array $routeParams
+     * @param array $queryParams
+     * @param array $options
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function testUrlFunction(
         string $template,
@@ -140,22 +154,31 @@ class TwigExtensionFunctionsRenderTest extends TestCase
         array $queryParams,
         ?string $fragment,
         array $options
-    ) {
+    ): void {
         $this->templates = [
             'template' => $template,
         ];
 
-        $this->urlHelper->generate($route, $routeParams, $queryParams, $fragment, $options)->willReturn('PATH');
-        $this->serverUrlHelper->generate('PATH')->willReturn('HOST/PATH');
+        $this->urlHelper->expects(self::once())->method('generate')->with(
+            $route,
+            $routeParams,
+            $queryParams,
+            $fragment,
+            $options
+        )->willReturn('PATH');
+        $this->serverUrlHelper->expects(self::once())->method('generate')->with('PATH')->willReturn('HOST/PATH');
         $twig = $this->getTwigEnvironment();
 
         $this->assertSame('HOST/PATH', $twig->render('template'));
     }
 
-    public function renderUrlProvider()
+    /**
+     * @return array<string, array<mixed>>
+     */
+    public function renderUrlProvider(): array
     {
         return [
-            'path'                => [
+            'path'                   => [
                 "{{ url('route', {'foo': 'bar'}) }}",
                 'route',
                 ['foo' => 'bar'],
@@ -163,7 +186,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
                 null,
                 [],
             ],
-            'path-query'          => [
+            'path-query'             => [
                 "{{ url('path-query', {'id': '3'}, {'foo': 'bar'}) }}",
                 'path-query',
                 ['id' => 3],
@@ -171,7 +194,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
                 null,
                 [],
             ],
-            'path-query-fragment' => [
+            'path-query-fragment'    => [
                 "{{ url('path-query-fragment', {'foo': 'bar'}, {'qux': 'quux'}, 'corge') }}",
                 'path-query-fragment',
                 ['foo' => 'bar'],
@@ -179,7 +202,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
                 'corge',
                 [],
             ],
-            'path-reuse-result' => [
+            'path-reuse-result'      => [
                 "{{ url('path-query-fragment', {}, {}, null, {'reuse_result_params': true}) }}",
                 'path-query-fragment',
                 [],
@@ -198,19 +221,31 @@ class TwigExtensionFunctionsRenderTest extends TestCase
         ];
     }
 
-    public function testAbsoluteUrlFunction()
+    /**
+     * @throws SyntaxError
+     * @throws RuntimeError
+     * @throws LoaderError
+     */
+    public function testAbsoluteUrlFunction(): void
     {
         $this->templates = [
             'template' => "{{ absolute_url('path/to/something') }}",
         ];
 
-        $this->serverUrlHelper->generate('path/to/something')->willReturn('HOST/PATH');
+        $this->serverUrlHelper->expects(self::once())->method('generate')->with('path/to/something')->willReturn(
+            'HOST/PATH'
+        );
         $twig = $this->getTwigEnvironment();
 
         $this->assertSame('HOST/PATH', $twig->render('template'));
     }
 
-    public function testAssetFunction()
+    /**
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws LoaderError
+     */
+    public function testAssetFunction(): void
     {
         $this->templates = [
             'template' => "{{ asset('path/to/asset/name.ext') }}",
@@ -221,7 +256,12 @@ class TwigExtensionFunctionsRenderTest extends TestCase
         $this->assertSame('path/to/asset/name.ext', $twig->render('template'));
     }
 
-    public function testVersionedAssetFunction()
+    /**
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws LoaderError
+     */
+    public function testVersionedAssetFunction(): void
     {
         $this->templates = [
             'template' => "{{ asset('path/to/asset/name.ext', version=3) }}",
@@ -230,5 +270,16 @@ class TwigExtensionFunctionsRenderTest extends TestCase
         $twig = $this->getTwigEnvironment();
 
         $this->assertSame('path/to/asset/name.ext?v=3', $twig->render('template'));
+    }
+
+    protected function setUp(): void
+    {
+        $this->twigLoader      = $this->createMock(LoaderInterface::class);
+        $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createMock(UrlHelper::class);
+
+        $this->templates = [
+            'template' => "{{ path('route') }}",
+        ];
     }
 }

@@ -12,6 +12,7 @@ namespace Mezzio\Twig;
 
 use ArrayObject;
 use DateTimeZone;
+use Exception as BaseException;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Psr\Container\ContainerInterface;
@@ -77,36 +78,38 @@ use function sprintf;
 class TwigEnvironmentFactory
 {
     /**
-     * @param ContainerInterface $container
-     *
-     * @return Environment
      * @throws LoaderError
      */
-    public function __invoke(ContainerInterface $container) : Environment
+    public function __invoke(ContainerInterface $container): Environment
     {
         $config = $container->has('config') ? $container->get('config') : [];
 
         if (! is_array($config) && ! $config instanceof ArrayObject) {
-            throw new Exception\InvalidConfigException(sprintf(
-                '"config" service must be an array or ArrayObject for the %s to be able to consume it; received %s',
-                __CLASS__,
-                (is_object($config) ? get_class($config) : gettype($config))
-            ));
+            throw new Exception\InvalidConfigException(
+                sprintf(
+                    '"config" service must be an array or ArrayObject for the %s to be able to consume it; received %s',
+                    self::class,
+                    is_object($config) ? get_class($config) : gettype($config)
+                )
+            );
         }
 
-        $debug    = (bool) ($config['debug'] ?? false);
-        $config   = TwigRendererFactory::mergeConfig($config);
+        $debug  = (bool) ($config['debug'] ?? false);
+        $config = TwigRendererFactory::mergeConfig($config);
 
         // Create the engine instance
         $loader      = new FilesystemLoader();
-        $environment = new Environment($loader, [
-            'cache'            => $config['cache_dir'] ?? false,
-            'debug'            => $config['debug'] ?? $debug,
-            'strict_variables' => $config['strict_variables'] ?? $debug,
-            'auto_reload'      => $config['auto_reload'] ?? $debug,
-            'optimizations'    => $config['optimizations'] ?? OptimizerNodeVisitor::OPTIMIZE_ALL,
-            'autoescape'       => $config['autoescape'] ?? 'html',
-        ]);
+        $environment = new Environment(
+            $loader,
+            [
+                'cache'            => $config['cache_dir'] ?? false,
+                'debug'            => $config['debug'] ?? $debug,
+                'strict_variables' => $config['strict_variables'] ?? $debug,
+                'auto_reload'      => $config['auto_reload'] ?? $debug,
+                'optimizations'    => $config['optimizations'] ?? OptimizerNodeVisitor::OPTIMIZE_ALL,
+                'autoescape'       => $config['autoescape'] ?? 'html',
+            ]
+        );
 
         if (isset($config['timezone'])) {
             $timezone = $config['timezone'];
@@ -115,14 +118,15 @@ class TwigEnvironmentFactory
             }
             try {
                 $timezone = new DateTimeZone($timezone);
-            } catch (\Exception $e) {
+            } catch (BaseException $e) {
                 throw new Exception\InvalidConfigException(sprintf('Unknown or invalid timezone: "%s"', $timezone));
             }
             $environment->getExtension(CoreExtension::class)->setTimezone($timezone);
         }
 
         // Add mezzio twig extension if requirements are met
-        if ($container->has(TwigExtension::class)
+        if (
+            $container->has(TwigExtension::class)
             && $container->has(ServerUrlHelper::class)
             && $container->has(UrlHelper::class)
         ) {
@@ -163,15 +167,13 @@ class TwigEnvironmentFactory
     /**
      * Inject extensions into the TwigEnvironment instance.
      *
-     * @param Environment        $environment
-     * @param ContainerInterface $container
-     * @param array              $extensions
+     * @param array $extensions
      */
     private function injectExtensions(
         Environment $environment,
         ContainerInterface $container,
         array $extensions
-    ) : void {
+    ): void {
         foreach ($extensions as $extension) {
             $extension = $this->loadExtension($extension, $container);
 
@@ -189,10 +191,6 @@ class TwigEnvironmentFactory
      * If the extension is not an ExtensionInterface, raises an exception.
      *
      * @param string|ExtensionInterface $extension
-     *
-     * @param ContainerInterface        $container
-     *
-     * @return ExtensionInterface
      */
     private function loadExtension($extension, ContainerInterface $container): ExtensionInterface
     {
@@ -202,11 +200,13 @@ class TwigEnvironmentFactory
         }
 
         if (! $extension instanceof ExtensionInterface) {
-            throw new Exception\InvalidExtensionException(sprintf(
-                'Twig extension must be an instance of %s; "%s" given,',
-                ExtensionInterface::class,
-                is_object($extension) ? get_class($extension) : gettype($extension)
-            ));
+            throw new Exception\InvalidExtensionException(
+                sprintf(
+                    'Twig extension must be an instance of %s; "%s" given,',
+                    ExtensionInterface::class,
+                    is_object($extension) ? get_class($extension) : gettype($extension)
+                )
+            );
         }
 
         return $extension;
@@ -215,15 +215,13 @@ class TwigEnvironmentFactory
     /**
      * Inject Runtime Loaders into the TwigEnvironment instance.
      *
-     * @param Environment        $environment
-     * @param ContainerInterface $container
-     * @param array              $runtimes
+     * @param array $runtimes
      */
     private function injectRuntimeLoaders(
         Environment $environment,
         ContainerInterface $container,
         array $runtimes
-    ) : void {
+    ): void {
         foreach ($runtimes as $runtimeLoader) {
             $runtimeLoader = $this->loadRuntimeLoader($runtimeLoader, $container);
             $environment->addRuntimeLoader($runtimeLoader);
@@ -232,10 +230,6 @@ class TwigEnvironmentFactory
 
     /**
      * @param string|RuntimeLoaderInterface $runtimeLoader
-     *
-     * @param ContainerInterface            $container
-     *
-     * @return RuntimeLoaderInterface
      */
     private function loadRuntimeLoader($runtimeLoader, ContainerInterface $container): RuntimeLoaderInterface
     {
@@ -245,11 +239,13 @@ class TwigEnvironmentFactory
         }
 
         if (! $runtimeLoader instanceof RuntimeLoaderInterface) {
-            throw new Exception\InvalidRuntimeLoaderException(sprintf(
-                'Twig runtime loader must be an instance of %s; "%s" given,',
-                RuntimeLoaderInterface::class,
-                is_object($runtimeLoader) ? get_class($runtimeLoader) : gettype($runtimeLoader)
-            ));
+            throw new Exception\InvalidRuntimeLoaderException(
+                sprintf(
+                    'Twig runtime loader must be an instance of %s; "%s" given,',
+                    RuntimeLoaderInterface::class,
+                    is_object($runtimeLoader) ? get_class($runtimeLoader) : gettype($runtimeLoader)
+                )
+            );
         }
 
         return $runtimeLoader;

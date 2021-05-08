@@ -1,3 +1,5 @@
 {
-  "test": "twig"
+    'test';
+:
+    'twig';
 }

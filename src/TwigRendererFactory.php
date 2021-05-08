@@ -32,10 +32,9 @@ class TwigRendererFactory
 {
     /**
      * @throws LoaderError
-     * @throws Exception\InvalidConfigException if a non-array, non-ArrayObject
-     *     $config is received.
+     * @throws Exception\InvalidConfigException If a non-array, non-ArrayObject $config is received.
      */
-    public function __invoke(ContainerInterface $container) : TwigRenderer
+    public function __invoke(ContainerInterface $container): TwigRenderer
     {
         $config      = $container->has('config') ? $container->get('config') : [];
         $config      = self::mergeConfig($config);
@@ -52,24 +51,25 @@ class TwigRendererFactory
      * array having precedence.
      *
      * @param array|ArrayObject $config
-     * @throws Exception\InvalidConfigException if a non-array, non-ArrayObject
-     *     $config is received.
+     * @throws Exception\InvalidConfigException If a non-array, non-ArrayObject $config is received.
      */
-    public static function mergeConfig($config) : array
+    public static function mergeConfig($config): array
     {
         $config = $config instanceof ArrayObject ? $config->getArrayCopy() : $config;
 
         if (! is_array($config)) {
-            throw new Exception\InvalidConfigException(sprintf(
-                'Config service MUST be an array or ArrayObject; received %s',
-                is_object($config) ? get_class($config) : gettype($config)
-            ));
+            throw new Exception\InvalidConfigException(
+                sprintf(
+                    'Config service MUST be an array or ArrayObject; received %s',
+                    is_object($config) ? get_class($config) : gettype($config)
+                )
+            );
         }
 
         $mezzioConfig = isset($config['templates']) && is_array($config['templates'])
             ? $config['templates']
             : [];
-        $twigConfig       = isset($config['twig']) && is_array($config['twig'])
+        $twigConfig   = isset($config['twig']) && is_array($config['twig'])
             ? $config['twig']
             : [];
 
@@ -88,19 +88,22 @@ class TwigRendererFactory
      *
      * @throws LoaderError
      */
-    private function getEnvironment(ContainerInterface $container) : Environment
+    private function getEnvironment(ContainerInterface $container): Environment
     {
         if ($container->has(Environment::class)) {
             return $container->get(Environment::class);
         }
 
-        trigger_error(sprintf(
-            '%s now expects you to register the factory %s for the service %s; '
-            . 'please update your dependency configuration.',
-            __CLASS__,
-            TwigEnvironmentFactory::class,
-            Environment::class
-        ), E_USER_DEPRECATED);
+        trigger_error(
+            sprintf(
+                '%s now expects you to register the factory %s for the service %s; '
+                . 'please update your dependency configuration.',
+                self::class,
+                TwigEnvironmentFactory::class,
+                Environment::class
+            ),
+            E_USER_DEPRECATED
+        );
 
         $factory = new TwigEnvironmentFactory();
         return $factory($container);
