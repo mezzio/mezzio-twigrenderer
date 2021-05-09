@@ -19,10 +19,8 @@ use Mezzio\Twig\TwigRendererFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use ReflectionException;
 use ReflectionProperty;
 use Twig\Environment;
-use Twig\Error\LoaderError;
 
 use function restore_error_handler;
 use function set_error_handler;
@@ -51,7 +49,6 @@ class TwigRendererFactoryTest extends TestCase
 
     /**
      * @return mixed
-     * @throws ReflectionException
      */
     public function fetchTwigEnvironment(TwigRenderer $twig)
     {
@@ -61,12 +58,9 @@ class TwigRendererFactoryTest extends TestCase
         return $r->getValue($twig);
     }
 
-    /**
-     * @throws LoaderError
-     */
     public function testCallingFactoryWithNoConfigReturnsTwigInstance(): TwigRenderer
     {
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap([
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap([
             ['config', false],
             [Environment::class, true],
             [TwigExtension::class, false],
@@ -96,9 +90,6 @@ class TwigRendererFactoryTest extends TestCase
         $this->assertEmpty($paths);
     }
 
-    /**
-     * @throws LoaderError
-     */
     public function testConfiguresTemplateSuffix(): void
     {
         $config = [
@@ -106,7 +97,7 @@ class TwigRendererFactoryTest extends TestCase
                 'extension' => 'tpl',
             ],
         ];
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap([
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap([
             ['config', true],
             [Environment::class, true],
             [TwigExtension::class, false],
@@ -114,7 +105,7 @@ class TwigRendererFactoryTest extends TestCase
 
         $environmentFactory = new TwigEnvironmentFactory();
         $container          = $this->container;
-        $this->container->expects(self::atLeastOnce())->method('get')->withAnyParameters()->willReturnCallback(
+        $this->container->expects(self::atLeastOnce())->method('get')->willReturnCallback(
             function (string $id) use ($config, $environmentFactory, $container) {
                 switch ($id) {
                     case 'config':
@@ -131,9 +122,6 @@ class TwigRendererFactoryTest extends TestCase
         $this->assertEquals('test.tpl', $twig->normalizeTemplate('test'));
     }
 
-    /**
-     * @throws LoaderError
-     */
     public function testUsesGlobalsConfigurationWhenAddingTwigExtension(): void
     {
         $config = [
@@ -141,7 +129,7 @@ class TwigRendererFactoryTest extends TestCase
                 'paths' => $this->getConfigurationPaths(),
             ],
         ];
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap([
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap([
             ['config', true],
             [Environment::class, true],
             [TwigExtension::class, false],
@@ -149,7 +137,7 @@ class TwigRendererFactoryTest extends TestCase
 
         $environmentFactory = new TwigEnvironmentFactory();
         $container          = $this->container;
-        $this->container->expects(self::atLeastOnce())->method('get')->withAnyParameters()->willReturnCallback(
+        $this->container->expects(self::atLeastOnce())->method('get')->willReturnCallback(
             function (string $id) use ($config, $environmentFactory, $container) {
                 switch ($id) {
                     case 'config':
@@ -250,12 +238,9 @@ class TwigRendererFactoryTest extends TestCase
         $this->assertContains($expected, $found, $message);
     }
 
-    /**
-     * @throws LoaderError
-     */
     public function testCallingFactoryWithoutTwigEnvironmentServiceEmitsDeprecationNotice(): void
     {
-        $this->container->expects(self::exactly(4))->method('has')->withAnyParameters()->willReturn(false);
+        $this->container->expects(self::exactly(4))->method('has')->willReturn(false);
 
         $factory = new TwigRendererFactory();
 

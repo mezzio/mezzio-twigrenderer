@@ -16,9 +16,6 @@ use Mezzio\Twig\TwigExtension;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
 
@@ -73,9 +70,6 @@ class TwigExtensionFunctionsRenderTest extends TestCase
      * @param array $routeParams
      * @param array $queryParams
      * @param array $options
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
      */
     public function testPathFunction(
         string $template,
@@ -154,9 +148,6 @@ class TwigExtensionFunctionsRenderTest extends TestCase
      * @param array $routeParams
      * @param array $queryParams
      * @param array $options
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
      */
     public function testUrlFunction(
         string $template,
@@ -232,11 +223,6 @@ class TwigExtensionFunctionsRenderTest extends TestCase
         ];
     }
 
-    /**
-     * @throws SyntaxError
-     * @throws RuntimeError
-     * @throws LoaderError
-     */
     public function testAbsoluteUrlFunction(): void
     {
         $this->templates = [
@@ -251,11 +237,6 @@ class TwigExtensionFunctionsRenderTest extends TestCase
         $this->assertSame('HOST/PATH', $twig->render('template'));
     }
 
-    /**
-     * @throws RuntimeError
-     * @throws SyntaxError
-     * @throws LoaderError
-     */
     public function testAssetFunction(): void
     {
         $this->templates = [
@@ -267,11 +248,6 @@ class TwigExtensionFunctionsRenderTest extends TestCase
         $this->assertSame('path/to/asset/name.ext', $twig->render('template'));
     }
 
-    /**
-     * @throws RuntimeError
-     * @throws SyntaxError
-     * @throws LoaderError
-     */
     public function testVersionedAssetFunction(): void
     {
         $this->templates = [

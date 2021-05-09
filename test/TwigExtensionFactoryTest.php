@@ -41,7 +41,7 @@ class TwigExtensionFactoryTest extends TestCase
 
     public function testRaisesExceptionForMissingServerUrlHelper(): void
     {
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturn(false);
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturn(false);
 
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
@@ -57,7 +57,7 @@ class TwigExtensionFactoryTest extends TestCase
 
     public function testRaisesExceptionForMissingUrlHelper(): void
     {
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap([
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap([
             [ServerUrlHelper::class, true],
             [UrlHelper::class, false],
             [Zend\Expressive\Helper\UrlHelper::class, false],
@@ -84,8 +84,8 @@ class TwigExtensionFactoryTest extends TestCase
             ],
         ];
 
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturn(true);
-        $this->container->expects(self::atLeastOnce())->method('get')->withAnyParameters()->willReturnMap([
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturn(true);
+        $this->container->expects(self::atLeastOnce())->method('get')->willReturnMap([
             ['config', $config],
             [ServerUrlHelper::class, $this->serverUrlHelper],
             [UrlHelper::class, $this->urlHelper],
@@ -109,8 +109,8 @@ class TwigExtensionFactoryTest extends TestCase
             ],
         ];
 
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturn(true);
-        $this->container->expects(self::atLeastOnce())->method('get')->withAnyParameters()->willReturnMap([
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturn(true);
+        $this->container->expects(self::atLeastOnce())->method('get')->willReturnMap([
             ['config', $config],
             [ServerUrlHelper::class, $this->serverUrlHelper],
             [UrlHelper::class, $this->urlHelper],

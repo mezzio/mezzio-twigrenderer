@@ -22,11 +22,8 @@ use Mezzio\Twig\TwigExtensionFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use ReflectionException;
 use ReflectionProperty;
 use Twig\Environment as TwigEnvironment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\Extension\OptimizerExtension;
@@ -42,12 +39,9 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->container = $this->createMock(ContainerInterface::class);
     }
 
-    /**
-     * @throws LoaderError
-     */
     public function testCallingFactoryWithNoConfigReturnsTwigEnvironmentInstance(): TwigEnvironment
     {
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturn(false);
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturn(false);
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container);
 
@@ -56,13 +50,10 @@ class TwigEnvironmentFactoryTest extends TestCase
         return $environment;
     }
 
-    /**
-     * @throws LoaderError
-     */
     public function testUsesDebugConfiguration(): void
     {
         $config = ['debug' => true];
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap(
             [['config', true], [TwigExtension::class, false]]
         );
         $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
@@ -85,13 +76,10 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->assertFalse($environment->isAutoReload());
     }
 
-    /**
-     * @throws LoaderError
-     */
     public function testCanSpecifyCacheDirectoryViaConfiguration(): void
     {
         $config = ['templates' => ['cache_dir' => __DIR__]];
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap(
             [['config', true], [TwigExtension::class, false]]
         );
         $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
@@ -101,21 +89,18 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->assertEquals($config['templates']['cache_dir'], $environment->getCache());
     }
 
-    /**
-     * @throws LoaderError
-     */
     public function testAddsTwigExtensionIfRouterIsInContainer(): void
     {
         $twigExtensionFactory = new TwigExtensionFactory();
         $serverUrlHelper      = $this->createMock(ServerUrlHelper::class);
         $urlHelper            = $this->createMock(UrlHelper::class);
 
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap(
             [['config', false], [TwigExtension::class, true], [ServerUrlHelper::class, true], [UrlHelper::class, true]]
         );
 
         $container = $this->container;
-        $this->container->expects(self::atLeastOnce())->method('get')->withAnyParameters()->willReturnCallback(
+        $this->container->expects(self::atLeastOnce())->method('get')->willReturnCallback(
             function (string $id) use ($twigExtensionFactory, $serverUrlHelper, $urlHelper, $container) {
                 switch ($id) {
                     case TwigExtension::class:
@@ -157,7 +142,6 @@ class TwigEnvironmentFactoryTest extends TestCase
     /**
      * @dataProvider invalidExtensions
      * @param mixed $extension
-     * @throws LoaderError
      */
     public function testRaisesExceptionForInvalidExtensions($extension): void
     {
@@ -167,7 +151,7 @@ class TwigEnvironmentFactoryTest extends TestCase
                 'extensions' => [$extension],
             ],
         ];
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap(
             [['config', true], [TwigExtension::class, false], [$extension, false]]
         );
         $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
@@ -199,7 +183,6 @@ class TwigEnvironmentFactoryTest extends TestCase
     /**
      * @dataProvider invalidConfiguration
      * @param mixed $config
-     * @throws LoaderError
      */
     public function testRaisesExceptionForInvalidConfigService($config, string $contains): void
     {
@@ -212,9 +195,6 @@ class TwigEnvironmentFactoryTest extends TestCase
         $factory($this->container);
     }
 
-    /**
-     * @throws LoaderError
-     */
     public function testUsesTimezoneConfiguration(): void
     {
         $tz     = DateTimeZone::listIdentifiers()[0];
@@ -223,7 +203,7 @@ class TwigEnvironmentFactoryTest extends TestCase
                 'timezone' => $tz,
             ],
         ];
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap(
             [['config', true], [TwigExtension::class, false]]
         );
         $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
@@ -235,9 +215,6 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->assertEquals(new DateTimeZone($tz), $fetchedTz);
     }
 
-    /**
-     * @throws LoaderError
-     */
     public function testRaisesExceptionForInvalidTimezone(): void
     {
         $tz     = 'Luna/Copernicus_Crater';
@@ -254,9 +231,6 @@ class TwigEnvironmentFactoryTest extends TestCase
         $factory($this->container);
     }
 
-    /**
-     * @throws LoaderError
-     */
     public function testRaisesExceptionForNonStringTimezone(): void
     {
         $config = [
@@ -296,7 +270,6 @@ class TwigEnvironmentFactoryTest extends TestCase
     /**
      * @dataProvider invalidRuntimeLoaders
      * @param mixed $runtimeLoader
-     * @throws LoaderError
      */
     public function testRaisesExceptionForInvalidRuntimeLoaders($runtimeLoader): void
     {
@@ -306,7 +279,7 @@ class TwigEnvironmentFactoryTest extends TestCase
                 'runtime_loaders' => [$runtimeLoader],
             ],
         ];
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap(
             [['config', true], [TwigExtension::class, false], [$runtimeLoader, false]]
         );
         $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
@@ -317,19 +290,15 @@ class TwigEnvironmentFactoryTest extends TestCase
         $factory($this->container);
     }
 
-    /**
-     * @throws RuntimeError
-     * @throws LoaderError
-     */
     public function testInjectsCustomRuntimeLoadersIntoTwigEnvironment(): void
     {
         $fooRuntime = $this->createMock(RuntimeLoaderInterface::class);
-        $fooRuntime->expects(self::atLeastOnce())->method('load')->withAnyParameters()->willReturnMap(
+        $fooRuntime->expects(self::atLeastOnce())->method('load')->willReturnMap(
             [['Test\Runtime\FooRuntime', 'foo-runtime'], ['Test\Runtime\BarRuntime', null]]
         );
 
         $barRuntime = $this->createMock(RuntimeLoaderInterface::class);
-        $barRuntime->expects(self::atLeastOnce())->method('load')->withAnyParameters()->willReturnMap(
+        $barRuntime->expects(self::atLeastOnce())->method('load')->willReturnMap(
             [['Test\Runtime\BarRuntime', 'bar-runtime'], ['Test\Runtime\FooRuntime', null]]
         );
 
@@ -342,10 +311,10 @@ class TwigEnvironmentFactoryTest extends TestCase
                 ],
             ],
         ];
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap(
             [['config', true], [TwigExtension::class, false], ['Test\Runtime\BarRuntimeLoader', true]]
         );
-        $this->container->expects(self::atLeastOnce())->method('get')->withAnyParameters()->willReturnMap([
+        $this->container->expects(self::atLeastOnce())->method('get')->willReturnMap([
             ['config', $config],
             ['Test\Runtime\BarRuntimeLoader', $barRuntime],
         ]);
@@ -358,9 +327,6 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->assertEquals('bar-runtime', $environment->getRuntime('Test\Runtime\BarRuntime'));
     }
 
-    /**
-     * @throws LoaderError|ReflectionException
-     */
     public function testUsesOptimizationsConfiguration(): void
     {
         $config = [
@@ -368,7 +334,7 @@ class TwigEnvironmentFactoryTest extends TestCase
                 'optimizations' => 0,
             ],
         ];
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap(
             [['config', true], [TwigExtension::class, false]]
         );
         $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
@@ -382,9 +348,6 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->assertSame(0, $property->getValue($extension));
     }
 
-    /**
-     * @throws LoaderError
-     */
     public function testUsesAutoescapeConfiguration(): void
     {
         $config = [
@@ -393,7 +356,7 @@ class TwigEnvironmentFactoryTest extends TestCase
             ],
         ];
 
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap(
             [['config', true], [TwigExtension::class, false]]
         );
         $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
@@ -404,9 +367,6 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->assertFalse($extension->getDefaultStrategy('template::name'));
     }
 
-    /**
-     * @throws LoaderError
-     */
     public function testAutoReloadIgnoreDebugConfiguration(): void
     {
         $config = [
@@ -416,7 +376,7 @@ class TwigEnvironmentFactoryTest extends TestCase
             ],
         ];
 
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap(
             [['config', true], [TwigExtension::class, false]]
         );
         $this->container->expects(self::once())->method('get')->with('config')->willReturn($config);
@@ -428,9 +388,6 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->assertTrue($environment->isDebug());
     }
 
-    /**
-     * @throws LoaderError
-     */
     public function testAutoReloadUsesConfiguration(): void
     {
         $config = [
@@ -440,7 +397,7 @@ class TwigEnvironmentFactoryTest extends TestCase
             ],
         ];
 
-        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap(
             [['config', true], [TwigExtension::class, false]]
         );
         $this->container->expects(self::once())->method('get')->with('config')->willReturn($config);
