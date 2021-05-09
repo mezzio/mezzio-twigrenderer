@@ -92,16 +92,13 @@ class TwigRendererFactory
             return $container->get(Environment::class);
         }
 
-        trigger_error(
-            sprintf(
-                '%s now expects you to register the factory %s for the service %s; '
-                . 'please update your dependency configuration.',
-                self::class,
-                TwigEnvironmentFactory::class,
-                Environment::class
-            ),
-            E_USER_DEPRECATED
-        );
+        trigger_error(sprintf(
+            '%s now expects you to register the factory %s for the service %s; '
+            . 'please update your dependency configuration.',
+            self::class,
+            TwigEnvironmentFactory::class,
+            Environment::class
+        ), E_USER_DEPRECATED);
 
         $factory = new TwigEnvironmentFactory();
         return $factory($container);

@@ -38,6 +38,11 @@ class TwigEnvironmentFactoryTest extends TestCase
     /** @var MockObject<ContainerInterface> */
     private $container;
 
+    protected function setUp(): void
+    {
+        $this->container = $this->createMock(ContainerInterface::class);
+    }
+
     /**
      * @throws LoaderError
      */
@@ -471,10 +476,5 @@ class TwigEnvironmentFactoryTest extends TestCase
 
         $this->assertTrue($environment->isAutoReload());
         $this->assertFalse($environment->isDebug());
-    }
-
-    protected function setUp(): void
-    {
-        $this->container = $this->createMock(ContainerInterface::class);
     }
 }

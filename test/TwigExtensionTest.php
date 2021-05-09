@@ -27,6 +27,12 @@ class TwigExtensionTest extends TestCase
     /** @var MockObject<UrlHelper> */
     private $urlHelper;
 
+    protected function setUp(): void
+    {
+        $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createMock(UrlHelper::class);
+    }
+
     public function testRegistersTwigFunctions(): void
     {
         $extension = $this->createExtension('', '');
@@ -185,11 +191,5 @@ class TwigExtensionTest extends TestCase
             'https://images.example.com/foo.png?v=0',
             $extension->renderAssetUrl('foo.png')
         );
-    }
-
-    protected function setUp(): void
-    {
-        $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
-        $this->urlHelper       = $this->createMock(UrlHelper::class);
     }
 }

@@ -33,6 +33,17 @@ class TwigExtensionFunctionsRenderTest extends TestCase
     /** @var MockObject<UrlHelper> */
     protected $urlHelper;
 
+    protected function setUp(): void
+    {
+        $this->twigLoader      = $this->createMock(LoaderInterface::class);
+        $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createMock(UrlHelper::class);
+
+        $this->templates = [
+            'template' => "{{ path('route') }}",
+        ];
+    }
+
     public function testEnvironmentCreation(): void
     {
         $twig = $this->getTwigEnvironment();
@@ -270,16 +281,5 @@ class TwigExtensionFunctionsRenderTest extends TestCase
         $twig = $this->getTwigEnvironment();
 
         $this->assertSame('path/to/asset/name.ext?v=3', $twig->render('template'));
-    }
-
-    protected function setUp(): void
-    {
-        $this->twigLoader      = $this->createMock(LoaderInterface::class);
-        $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
-        $this->urlHelper       = $this->createMock(UrlHelper::class);
-
-        $this->templates = [
-            'template' => "{{ path('route') }}",
-        ];
     }
 }

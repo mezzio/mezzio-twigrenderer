@@ -97,17 +97,14 @@ class TwigEnvironmentFactory
 
         // Create the engine instance
         $loader      = new FilesystemLoader();
-        $environment = new Environment(
-            $loader,
-            [
-                'cache'            => $config['cache_dir'] ?? false,
-                'debug'            => $config['debug'] ?? $debug,
-                'strict_variables' => $config['strict_variables'] ?? $debug,
-                'auto_reload'      => $config['auto_reload'] ?? $debug,
-                'optimizations'    => $config['optimizations'] ?? OptimizerNodeVisitor::OPTIMIZE_ALL,
-                'autoescape'       => $config['autoescape'] ?? 'html',
-            ]
-        );
+        $environment = new Environment($loader, [
+            'cache'            => $config['cache_dir'] ?? false,
+            'debug'            => $config['debug'] ?? $debug,
+            'strict_variables' => $config['strict_variables'] ?? $debug,
+            'auto_reload'      => $config['auto_reload'] ?? $debug,
+            'optimizations'    => $config['optimizations'] ?? OptimizerNodeVisitor::OPTIMIZE_ALL,
+            'autoescape'       => $config['autoescape'] ?? 'html',
+        ]);
 
         if (isset($config['timezone'])) {
             $timezone = $config['timezone'];

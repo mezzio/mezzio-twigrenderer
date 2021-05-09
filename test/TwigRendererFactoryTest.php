@@ -39,6 +39,17 @@ class TwigRendererFactoryTest extends TestCase
     /** @var callable */
     private $errorHandler;
 
+    protected function setUp(): void
+    {
+        $this->restoreErrorHandler();
+        $this->container = $this->createMock(ContainerInterface::class);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->restoreErrorHandler();
+    }
+
     /**
      * @return mixed
      * @throws ReflectionException
@@ -311,22 +322,11 @@ class TwigRendererFactoryTest extends TestCase
         $this->assertArrayHasKey('timezone', $mergedConfig);
     }
 
-    protected function setUp(): void
-    {
-        $this->restoreErrorHandler();
-        $this->container = $this->createMock(ContainerInterface::class);
-    }
-
     public function restoreErrorHandler(): void
     {
         if ($this->errorHandler) {
             restore_error_handler();
             $this->errorHandler = null;
         }
-    }
-
-    protected function tearDown(): void
-    {
-        $this->restoreErrorHandler();
     }
 }

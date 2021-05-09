@@ -32,6 +32,13 @@ class TwigExtensionFactoryTest extends TestCase
     /** @var MockObject<UrlHelper> */
     private $urlHelper;
 
+    protected function setUp(): void
+    {
+        $this->container       = $this->createMock(ContainerInterface::class);
+        $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createMock(UrlHelper::class);
+    }
+
     public function testRaisesExceptionForMissingServerUrlHelper(): void
     {
         $this->container->expects(self::exactly(2))->method('has')->withConsecutive(
@@ -133,12 +140,5 @@ class TwigExtensionFactoryTest extends TestCase
 
         $this->assertInstanceOf(TwigExtension::class, $extension);
         $this->assertEquals($config['twig']['globals'], $extension->getGlobals());
-    }
-
-    protected function setUp(): void
-    {
-        $this->container       = $this->createMock(ContainerInterface::class);
-        $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
-        $this->urlHelper       = $this->createMock(UrlHelper::class);
     }
 }

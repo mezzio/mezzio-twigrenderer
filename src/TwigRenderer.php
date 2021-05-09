@@ -34,12 +34,12 @@ class TwigRenderer implements TemplateRendererInterface
     use ArrayParametersTrait;
     use DefaultParamsTrait;
 
+    /** @var string */
+    private $suffix;
     /** @var FilesystemLoader */
     protected $twigLoader;
     /** @var Environment */
     protected $template;
-    /** @var string */
-    private $suffix;
 
     public function __construct(?Environment $template = null, string $suffix = 'html')
     {
@@ -97,22 +97,6 @@ class TwigRenderer implements TemplateRendererInterface
     }
 
     /**
-     * Normalize namespaced template.
-     *
-     * Normalizes templates in the format "namespace::template" to
-     * "@namespace/template".
-     */
-    public function normalizeTemplate(string $template): string
-    {
-        $template = preg_replace('#^([^:]+)::(.*)$#', '@$1/$2', $template);
-        if (! preg_match('#\.[a-z]+$#i', $template)) {
-            return sprintf('%s.%s', $template, $this->suffix);
-        }
-
-        return $template;
-    }
-
-    /**
      * Add a path for template
      *
      * @throws LoaderError
@@ -139,5 +123,21 @@ class TwigRenderer implements TemplateRendererInterface
             }
         }
         return $paths;
+    }
+
+    /**
+     * Normalize namespaced template.
+     *
+     * Normalizes templates in the format "namespace::template" to
+     * "@namespace/template".
+     */
+    public function normalizeTemplate(string $template): string
+    {
+        $template = preg_replace('#^([^:]+)::(.*)$#', '@$1/$2', $template);
+        if (! preg_match('#\.[a-z]+$#i', $template)) {
+            return sprintf('%s.%s', $template, $this->suffix);
+        }
+
+        return $template;
     }
 }

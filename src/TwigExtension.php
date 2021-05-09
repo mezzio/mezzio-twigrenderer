@@ -73,6 +73,31 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
     }
 
     /**
+     * Render relative uri for a given named route
+     *
+     * Usage: {{ path('article_show', {'id': '3'}) }}
+     * Generates: /article/3
+     *
+     * Usage: {{ path('article_show', {'id': '3'}, {'foo': 'bar'}, 'fragment') }}
+     * Generates: /article/3?foo=bar#fragment
+     *
+     * @param array $routeParams
+     * @param array $queryParams
+     * @param array $options Can have the following keys:
+     *                             - reuse_result_params (bool): indicates if the current
+     *                             RouteResult parameters will be used, defaults to true
+     */
+    public function renderUri(
+        ?string $route = null,
+        array $routeParams = [],
+        array $queryParams = [],
+        ?string $fragmentIdentifier = null,
+        array $options = []
+    ): string {
+        return $this->urlHelper->generate($route, $routeParams, $queryParams, $fragmentIdentifier, $options);
+    }
+
+    /**
      * Render absolute url for a given named route
      *
      * Usage: {{ url('article_show', {'slug': 'article.slug'}) }}
@@ -97,31 +122,6 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
         return $this->serverUrlHelper->generate(
             $this->renderUri($route, $routeParams, $queryParams, $fragmentIdentifier, $options)
         );
-    }
-
-    /**
-     * Render relative uri for a given named route
-     *
-     * Usage: {{ path('article_show', {'id': '3'}) }}
-     * Generates: /article/3
-     *
-     * Usage: {{ path('article_show', {'id': '3'}, {'foo': 'bar'}, 'fragment') }}
-     * Generates: /article/3?foo=bar#fragment
-     *
-     * @param array $routeParams
-     * @param array $queryParams
-     * @param array $options Can have the following keys:
-     *                             - reuse_result_params (bool): indicates if the current
-     *                             RouteResult parameters will be used, defaults to true
-     */
-    public function renderUri(
-        ?string $route = null,
-        array $routeParams = [],
-        array $queryParams = [],
-        ?string $fragmentIdentifier = null,
-        array $options = []
-    ): string {
-        return $this->urlHelper->generate($route, $routeParams, $queryParams, $fragmentIdentifier, $options);
     }
 
     /**

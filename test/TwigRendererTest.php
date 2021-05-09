@@ -26,11 +26,13 @@ use function var_export;
 
 class TwigRendererTest extends TestCase
 {
-    /** @var FilesystemLoader */
-    private $twigFilesystem;
-
     /** @var Environment */
     private $twigEnvironment;
+
+    protected function setUp(): void
+    {
+        $this->twigEnvironment = new Environment(new FilesystemLoader());
+    }
 
     public function assertEqualTemplatePath(
         TemplatePath $expected,
@@ -214,7 +216,7 @@ class TwigRendererTest extends TestCase
         $renderer = new TwigRenderer();
         $renderer->addPath(__DIR__ . '/TestAsset/test', 'test');
 
-        $expected = file_get_contents(__DIR__ . '/TestAsset/test/test.js');
+        $expected = file_get_contents(__DIR__ . '/TestAsset/test/test.json');
         $test     = $renderer->render('test::test.js');
 
         $this->assertSame($expected, $test);
@@ -280,11 +282,5 @@ class TwigRendererTest extends TestCase
         $content = file_get_contents(__DIR__ . '/TestAsset/twig.html');
         $content = str_replace('{{ name }}', $name2, $content);
         $this->assertEquals($content, $result);
-    }
-
-    protected function setUp(): void
-    {
-        $this->twigFilesystem  = new FilesystemLoader();
-        $this->twigEnvironment = new Environment($this->twigFilesystem);
     }
 }

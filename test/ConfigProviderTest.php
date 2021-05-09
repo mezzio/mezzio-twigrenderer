@@ -18,6 +18,11 @@ class ConfigProviderTest extends TestCase
     /** @var ConfigProvider */
     private $provider;
 
+    protected function setUp(): void
+    {
+        $this->provider = new ConfigProvider();
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -38,10 +43,5 @@ class ConfigProviderTest extends TestCase
         $this->assertArrayHasKey('dependencies', $config);
         $this->assertArrayHasKey('templates', $config);
         $this->assertIsArray($config['dependencies']);
-    }
-
-    protected function setUp(): void
-    {
-        $this->provider = new ConfigProvider();
     }
 }
