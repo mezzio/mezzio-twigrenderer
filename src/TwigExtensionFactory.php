@@ -14,6 +14,8 @@ use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Twig\Exception\InvalidConfigException;
 use Psr\Container\ContainerInterface;
+use Zend\Expressive\Helper\ServerUrlHelper as ZfServerUrlHelper;
+use Zend\Expressive\Helper\UrlHelper as ZfUrlHelper;
 
 use function sprintf;
 
@@ -21,20 +23,16 @@ class TwigExtensionFactory
 {
     public function __invoke(ContainerInterface $container): TwigExtension
     {
-        $serverUrlHelper = $container->has(ServerUrlHelper::class) ? ServerUrlHelper::class : (
-        $container->has(\Zend\Expressive\Helper\ServerUrlHelper::class)
-            ? \Zend\Expressive\Helper\ServerUrlHelper::class
-            : null
-        );
+        $serverUrlHelper = $container->has(ServerUrlHelper::class)
+            ? ServerUrlHelper::class
+            : ($container->has(ZfServerUrlHelper::class) ? ZfServerUrlHelper::class : null);
         if ($serverUrlHelper === null) {
             throw new InvalidConfigException(sprintf('Missing required `%s` dependency.', ServerUrlHelper::class));
         }
 
-        $urlHelper = $container->has(UrlHelper::class) ? UrlHelper::class : (
-        $container->has(\Zend\Expressive\Helper\UrlHelper::class)
-            ? \Zend\Expressive\Helper\UrlHelper::class
-            : null
-        );
+        $urlHelper = $container->has(UrlHelper::class)
+            ? UrlHelper::class
+            : ($container->has(ZfUrlHelper::class) ? ZfUrlHelper::class : null);
         if ($urlHelper === null) {
             throw new InvalidConfigException(sprintf('Missing required `%s` dependency.', UrlHelper::class));
         }
