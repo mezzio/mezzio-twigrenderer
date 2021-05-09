@@ -111,7 +111,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $serverUrlHelper      = $this->createMock(ServerUrlHelper::class);
         $urlHelper            = $this->createMock(UrlHelper::class);
 
-        $this->container->expects(self::exactly(9))->method('has')->withConsecutive(
+        $this->container->expects(self::exactly(7))->method('has')->withConsecutive(
             ['config'],
             [TwigExtension::class],
             [ServerUrlHelper::class],
@@ -119,8 +119,6 @@ class TwigEnvironmentFactoryTest extends TestCase
             [ServerUrlHelper::class],
             [UrlHelper::class],
             ['config'],
-            [ServerUrlHelper::class],
-            [UrlHelper::class],
         )->willReturnOnConsecutiveCalls(
             false,
             true,
@@ -129,8 +127,6 @@ class TwigEnvironmentFactoryTest extends TestCase
             true,
             true,
             false,
-            true,
-            true,
         );
 
         $container = $this->container;

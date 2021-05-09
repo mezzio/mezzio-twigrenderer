@@ -58,12 +58,10 @@ class TwigRendererFactory
         $config = $config instanceof ArrayObject ? $config->getArrayCopy() : $config;
 
         if (! is_array($config)) {
-            throw new Exception\InvalidConfigException(
-                sprintf(
-                    'Config service MUST be an array or ArrayObject; received %s',
-                    is_object($config) ? get_class($config) : gettype($config)
-                )
-            );
+            throw new Exception\InvalidConfigException(sprintf(
+                'Config service MUST be an array or ArrayObject; received %s',
+                is_object($config) ? get_class($config) : gettype($config)
+            ));
         }
 
         $mezzioConfig = isset($config['templates']) && is_array($config['templates'])

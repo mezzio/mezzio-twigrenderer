@@ -80,12 +80,10 @@ class TwigExtensionFactoryTest extends TestCase
             ],
         ];
 
-        $this->container->expects(self::exactly(5))->method('has')->withConsecutive(
+        $this->container->expects(self::exactly(3))->method('has')->withConsecutive(
             [ServerUrlHelper::class],
             [UrlHelper::class],
             ['config'],
-            [ServerUrlHelper::class],
-            [UrlHelper::class],
         )->willReturn(true);
         $this->container->expects(self::exactly(3))->method('get')->withConsecutive(
             ['config'],
@@ -115,12 +113,10 @@ class TwigExtensionFactoryTest extends TestCase
             ],
         ];
 
-        $this->container->expects(self::exactly(5))->method('has')->withConsecutive(
+        $this->container->expects(self::exactly(3))->method('has')->withConsecutive(
             [ServerUrlHelper::class],
             [UrlHelper::class],
             ['config'],
-            [ServerUrlHelper::class],
-            [UrlHelper::class],
         )->willReturn(true);
         $this->container->expects(self::exactly(3))->method('get')->withConsecutive(
             ['config'],

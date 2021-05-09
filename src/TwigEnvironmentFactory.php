@@ -85,13 +85,11 @@ class TwigEnvironmentFactory
         $config = $container->has('config') ? $container->get('config') : [];
 
         if (! is_array($config) && ! $config instanceof ArrayObject) {
-            throw new Exception\InvalidConfigException(
-                sprintf(
-                    '"config" service must be an array or ArrayObject for the %s to be able to consume it; received %s',
-                    self::class,
-                    is_object($config) ? get_class($config) : gettype($config)
-                )
-            );
+            throw new Exception\InvalidConfigException(sprintf(
+                '"config" service must be an array or ArrayObject for the %s to be able to consume it; received %s',
+                self::class,
+                is_object($config) ? get_class($config) : gettype($config)
+            ));
         }
 
         $debug  = (bool) ($config['debug'] ?? false);
@@ -200,13 +198,11 @@ class TwigEnvironmentFactory
         }
 
         if (! $extension instanceof ExtensionInterface) {
-            throw new Exception\InvalidExtensionException(
-                sprintf(
-                    'Twig extension must be an instance of %s; "%s" given,',
-                    ExtensionInterface::class,
-                    is_object($extension) ? get_class($extension) : gettype($extension)
-                )
-            );
+            throw new Exception\InvalidExtensionException(sprintf(
+                'Twig extension must be an instance of %s; "%s" given,',
+                ExtensionInterface::class,
+                is_object($extension) ? get_class($extension) : gettype($extension)
+            ));
         }
 
         return $extension;
@@ -239,13 +235,11 @@ class TwigEnvironmentFactory
         }
 
         if (! $runtimeLoader instanceof RuntimeLoaderInterface) {
-            throw new Exception\InvalidRuntimeLoaderException(
-                sprintf(
-                    'Twig runtime loader must be an instance of %s; "%s" given,',
-                    RuntimeLoaderInterface::class,
-                    is_object($runtimeLoader) ? get_class($runtimeLoader) : gettype($runtimeLoader)
-                )
-            );
+            throw new Exception\InvalidRuntimeLoaderException(sprintf(
+                'Twig runtime loader must be an instance of %s; "%s" given,',
+                RuntimeLoaderInterface::class,
+                is_object($runtimeLoader) ? get_class($runtimeLoader) : gettype($runtimeLoader)
+            ));
         }
 
         return $runtimeLoader;
