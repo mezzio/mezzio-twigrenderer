@@ -20,7 +20,6 @@ use Mezzio\Twig\TwigEnvironmentFactory;
 use Mezzio\Twig\TwigExtension;
 use Mezzio\Twig\TwigExtensionFactory;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\MockObject\Stub\ReturnCallback;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionException;
@@ -48,10 +47,7 @@ class TwigEnvironmentFactoryTest extends TestCase
      */
     public function testCallingFactoryWithNoConfigReturnsTwigEnvironmentInstance(): TwigEnvironment
     {
-        $this->container->expects(self::exactly(2))->method('has')->withConsecutive(
-            ['config'],
-            [TwigExtension::class],
-        )->willReturn(false);
+        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturn(false);
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container);
 
@@ -66,11 +62,10 @@ class TwigEnvironmentFactoryTest extends TestCase
     public function testUsesDebugConfiguration(): void
     {
         $config = ['debug' => true];
-        $this->container->expects(self::exactly(2))->method('has')->withConsecutive(
-            ['config'],
-            [TwigExtension::class],
-        )->willReturnOnConsecutiveCalls(true, false);
-        $this->container->expects(self::once())->method('get')->with('config')->willReturn($config);
+        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+            [['config', true], [TwigExtension::class, false]]
+        );
+        $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container);
 
@@ -96,11 +91,10 @@ class TwigEnvironmentFactoryTest extends TestCase
     public function testCanSpecifyCacheDirectoryViaConfiguration(): void
     {
         $config = ['templates' => ['cache_dir' => __DIR__]];
-        $this->container->expects(self::exactly(2))->method('has')->withConsecutive(
-            ['config'],
-            [TwigExtension::class],
-        )->willReturnOnConsecutiveCalls(true, false);
-        $this->container->expects(self::once())->method('get')->with('config')->willReturn($config);
+        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+            [['config', true], [TwigExtension::class, false]]
+        );
+        $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container);
 
@@ -116,33 +110,23 @@ class TwigEnvironmentFactoryTest extends TestCase
         $serverUrlHelper      = $this->createMock(ServerUrlHelper::class);
         $urlHelper            = $this->createMock(UrlHelper::class);
 
-        $this->container->expects(self::exactly(7))->method('has')->withConsecutive(
-            ['config'],
-            [TwigExtension::class],
-            [ServerUrlHelper::class],
-            [UrlHelper::class],
-            [ServerUrlHelper::class],
-            [UrlHelper::class],
-            ['config'],
-        )->willReturnOnConsecutiveCalls(
-            false,
-            true,
-            true,
-            true,
-            true,
-            true,
-            false,
+        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+            [['config', false], [TwigExtension::class, true], [ServerUrlHelper::class, true], [UrlHelper::class, true]]
         );
 
         $container = $this->container;
-        $this->container->expects(self::exactly(3))->method('get')->willReturnOnConsecutiveCalls(
-            new ReturnCallback(
-                function () use ($twigExtensionFactory, $container) {
-                    return $twigExtensionFactory($container);
+        $this->container->expects(self::atLeastOnce())->method('get')->withAnyParameters()->willReturnCallback(
+            function (string $id) use ($twigExtensionFactory, $serverUrlHelper, $urlHelper, $container) {
+                switch ($id) {
+                    case TwigExtension::class:
+                        return $twigExtensionFactory($container);
+                    case ServerUrlHelper::class:
+                        return $serverUrlHelper;
+                    case UrlHelper::class:
+                        return $urlHelper;
                 }
-            ),
-            $serverUrlHelper,
-            $urlHelper,
+                return null;
+            }
         );
 
         $factory     = new TwigEnvironmentFactory();
@@ -183,12 +167,10 @@ class TwigEnvironmentFactoryTest extends TestCase
                 'extensions' => [$extension],
             ],
         ];
-        $this->container->expects(self::atLeast(2))->method('has')->withConsecutive(
-            ['config'],
-            [TwigExtension::class],
-            [$extension],
-        )->willReturnOnConsecutiveCalls(true, false, false);
-        $this->container->expects(self::once())->method('get')->with('config')->willReturn($config);
+        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+            [['config', true], [TwigExtension::class, false], [$extension, false]]
+        );
+        $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
 
         $factory = new TwigEnvironmentFactory();
 
@@ -221,8 +203,8 @@ class TwigEnvironmentFactoryTest extends TestCase
      */
     public function testRaisesExceptionForInvalidConfigService($config, string $contains): void
     {
-        $this->container->expects(self::once())->method('has')->with('config')->willReturn(true);
-        $this->container->expects(self::once())->method('get')->with('config')->willReturn($config);
+        $this->container->expects(self::atLeastOnce())->method('has')->with('config')->willReturn(true);
+        $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
         $factory = new TwigEnvironmentFactory();
 
         $this->expectException(InvalidConfigException::class);
@@ -241,11 +223,10 @@ class TwigEnvironmentFactoryTest extends TestCase
                 'timezone' => $tz,
             ],
         ];
-        $this->container->expects(self::exactly(2))->method('has')->withConsecutive(
-            ['config'],
-            [TwigExtension::class],
-        )->willReturnOnConsecutiveCalls(true, false);
-        $this->container->expects(self::once())->method('get')->with('config')->willReturn($config);
+        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+            [['config', true], [TwigExtension::class, false]]
+        );
+        $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container);
         /** @var CoreExtension $extension */
@@ -265,8 +246,8 @@ class TwigEnvironmentFactoryTest extends TestCase
                 'timezone' => $tz,
             ],
         ];
-        $this->container->expects(self::once(1))->method('has')->with('config')->willReturn(true);
-        $this->container->expects(self::once())->method('get')->with('config')->willReturn($config);
+        $this->container->expects(self::atLeastOnce())->method('has')->with('config')->willReturn(true);
+        $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
         $factory = new TwigEnvironmentFactory();
 
         $this->expectException(InvalidConfigException::class);
@@ -283,8 +264,8 @@ class TwigEnvironmentFactoryTest extends TestCase
                 'timezone' => new DateTimeZone('UTC'),
             ],
         ];
-        $this->container->expects(self::once())->method('has')->with('config')->willReturn(true);
-        $this->container->expects(self::once())->method('get')->with('config')->willReturn($config);
+        $this->container->expects(self::atLeastOnce())->method('has')->with('config')->willReturn(true);
+        $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
         $factory = new TwigEnvironmentFactory();
 
         $this->expectException(InvalidConfigException::class);
@@ -325,12 +306,10 @@ class TwigEnvironmentFactoryTest extends TestCase
                 'runtime_loaders' => [$runtimeLoader],
             ],
         ];
-        $this->container->expects(self::atLeast(2))->method('has')->withConsecutive(
-            ['config'],
-            [TwigExtension::class],
-            [$runtimeLoader],
-        )->willReturnOnConsecutiveCalls(true, false, false);
-        $this->container->expects(self::once())->method('get')->with('config')->willReturn($config);
+        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+            [['config', true], [TwigExtension::class, false], [$runtimeLoader, false]]
+        );
+        $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
 
         $factory = new TwigEnvironmentFactory();
 
@@ -345,13 +324,14 @@ class TwigEnvironmentFactoryTest extends TestCase
     public function testInjectsCustomRuntimeLoadersIntoTwigEnvironment(): void
     {
         $fooRuntime = $this->createMock(RuntimeLoaderInterface::class);
-        $fooRuntime->expects(self::exactly(2))->method('load')->withConsecutive(
-            ['Test\Runtime\FooRuntime'],
-            ['Test\Runtime\BarRuntime']
-        )->willReturnOnConsecutiveCalls('foo-runtime', null);
+        $fooRuntime->expects(self::atLeastOnce())->method('load')->withAnyParameters()->willReturnMap(
+            [['Test\Runtime\FooRuntime', 'foo-runtime'], ['Test\Runtime\BarRuntime', null]]
+        );
 
         $barRuntime = $this->createMock(RuntimeLoaderInterface::class);
-        $barRuntime->expects(self::once())->method('load')->with('Test\Runtime\BarRuntime')->willReturn('bar-runtime');
+        $barRuntime->expects(self::atLeastOnce())->method('load')->withAnyParameters()->willReturnMap(
+            [['Test\Runtime\BarRuntime', 'bar-runtime'], ['Test\Runtime\FooRuntime', null]]
+        );
 
         $config = [
             'templates' => [],
@@ -362,15 +342,13 @@ class TwigEnvironmentFactoryTest extends TestCase
                 ],
             ],
         ];
-        $this->container->expects(self::exactly(3))->method('has')->withConsecutive(
-            ['config'],
-            [TwigExtension::class],
-            ['Test\Runtime\BarRuntimeLoader'],
-        )->willReturnOnConsecutiveCalls(true, false, true);
-        $this->container->expects(self::exactly(2))->method('get')->withConsecutive(
-            ['config'],
-            ['Test\Runtime\BarRuntimeLoader']
-        )->willReturnOnConsecutiveCalls($config, $barRuntime);
+        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+            [['config', true], [TwigExtension::class, false], ['Test\Runtime\BarRuntimeLoader', true]]
+        );
+        $this->container->expects(self::atLeastOnce())->method('get')->withAnyParameters()->willReturnMap([
+            ['config', $config],
+            ['Test\Runtime\BarRuntimeLoader', $barRuntime],
+        ]);
 
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container);
@@ -390,11 +368,10 @@ class TwigEnvironmentFactoryTest extends TestCase
                 'optimizations' => 0,
             ],
         ];
-        $this->container->expects(self::exactly(2))->method('has')->withConsecutive(
-            ['config'],
-            [TwigExtension::class],
-        )->willReturnOnConsecutiveCalls(true, false);
-        $this->container->expects(self::once())->method('get')->with('config')->willReturn($config);
+        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+            [['config', true], [TwigExtension::class, false]]
+        );
+        $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container);
 
@@ -416,11 +393,10 @@ class TwigEnvironmentFactoryTest extends TestCase
             ],
         ];
 
-        $this->container->expects(self::exactly(2))->method('has')->withConsecutive(
-            ['config'],
-            [TwigExtension::class],
-        )->willReturnOnConsecutiveCalls(true, false);
-        $this->container->expects(self::once())->method('get')->with('config')->willReturn($config);
+        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+            [['config', true], [TwigExtension::class, false]]
+        );
+        $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container);
         /** @var EscaperExtension $extension */
@@ -440,10 +416,9 @@ class TwigEnvironmentFactoryTest extends TestCase
             ],
         ];
 
-        $this->container->expects(self::exactly(2))->method('has')->withConsecutive(
-            ['config'],
-            [TwigExtension::class],
-        )->willReturnOnConsecutiveCalls(true, false);
+        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+            [['config', true], [TwigExtension::class, false]]
+        );
         $this->container->expects(self::once())->method('get')->with('config')->willReturn($config);
 
         $factory     = new TwigEnvironmentFactory();
@@ -465,10 +440,9 @@ class TwigEnvironmentFactoryTest extends TestCase
             ],
         ];
 
-        $this->container->expects(self::exactly(2))->method('has')->withConsecutive(
-            ['config'],
-            [TwigExtension::class],
-        )->willReturnOnConsecutiveCalls(true, false);
+        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap(
+            [['config', true], [TwigExtension::class, false]]
+        );
         $this->container->expects(self::once())->method('get')->with('config')->willReturn($config);
 
         $factory     = new TwigEnvironmentFactory();

@@ -217,7 +217,7 @@ class TwigRendererTest extends TestCase
         $renderer->addPath(__DIR__ . '/TestAsset/test', 'test');
 
         $expected = file_get_contents(__DIR__ . '/TestAsset/test/test.json');
-        $test     = $renderer->render('test::test.js');
+        $test     = $renderer->render('test::test.json');
 
         $this->assertSame($expected, $test);
     }

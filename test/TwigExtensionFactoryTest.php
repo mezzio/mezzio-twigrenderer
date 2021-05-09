@@ -41,10 +41,7 @@ class TwigExtensionFactoryTest extends TestCase
 
     public function testRaisesExceptionForMissingServerUrlHelper(): void
     {
-        $this->container->expects(self::exactly(2))->method('has')->withConsecutive(
-            [ServerUrlHelper::class],
-            [\Zend\Expressive\Helper\ServerUrlHelper::class]
-        )->willReturn(false);
+        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturn(false);
 
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
@@ -60,11 +57,11 @@ class TwigExtensionFactoryTest extends TestCase
 
     public function testRaisesExceptionForMissingUrlHelper(): void
     {
-        $this->container->expects(self::exactly(3))->method('has')->withConsecutive(
-            [ServerUrlHelper::class],
-            [UrlHelper::class],
-            [\Zend\Expressive\Helper\UrlHelper::class]
-        )->willReturnOnConsecutiveCalls(true, false, false);
+        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturnMap([
+            [ServerUrlHelper::class, true],
+            [UrlHelper::class, false],
+            [Zend\Expressive\Helper\UrlHelper::class, false],
+        ]);
 
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
@@ -87,20 +84,12 @@ class TwigExtensionFactoryTest extends TestCase
             ],
         ];
 
-        $this->container->expects(self::exactly(3))->method('has')->withConsecutive(
-            [ServerUrlHelper::class],
-            [UrlHelper::class],
-            ['config'],
-        )->willReturn(true);
-        $this->container->expects(self::exactly(3))->method('get')->withConsecutive(
-            ['config'],
-            [ServerUrlHelper::class],
-            [UrlHelper::class],
-        )->willReturnOnConsecutiveCalls(
-            $config,
-            $this->serverUrlHelper,
-            $this->urlHelper,
-        );
+        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturn(true);
+        $this->container->expects(self::atLeastOnce())->method('get')->withAnyParameters()->willReturnMap([
+            ['config', $config],
+            [ServerUrlHelper::class, $this->serverUrlHelper],
+            [UrlHelper::class, $this->urlHelper],
+        ]);
 
         $factory   = new TwigExtensionFactory();
         $extension = $factory($this->container);
@@ -120,20 +109,12 @@ class TwigExtensionFactoryTest extends TestCase
             ],
         ];
 
-        $this->container->expects(self::exactly(3))->method('has')->withConsecutive(
-            [ServerUrlHelper::class],
-            [UrlHelper::class],
-            ['config'],
-        )->willReturn(true);
-        $this->container->expects(self::exactly(3))->method('get')->withConsecutive(
-            ['config'],
-            [ServerUrlHelper::class],
-            [UrlHelper::class],
-        )->willReturnOnConsecutiveCalls(
-            $config,
-            $this->serverUrlHelper,
-            $this->urlHelper,
-        );
+        $this->container->expects(self::atLeastOnce())->method('has')->withAnyParameters()->willReturn(true);
+        $this->container->expects(self::atLeastOnce())->method('get')->withAnyParameters()->willReturnMap([
+            ['config', $config],
+            [ServerUrlHelper::class, $this->serverUrlHelper],
+            [UrlHelper::class, $this->urlHelper],
+        ]);
 
         $factory   = new TwigExtensionFactory();
         $extension = $factory($this->container);
