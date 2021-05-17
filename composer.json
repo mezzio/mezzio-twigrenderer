@@ -1,7 +1,6 @@
 {
     "name": "mezzio/mezzio-twigrenderer",
     "description": "Twig integration for Mezzio",
-    "license": "BSD-3-Clause",
     "keywords": [
         "laminas",
         "mezzio",
@@ -12,22 +11,7 @@
         "twig"
     ],
     "homepage": "https://mezzio.dev",
-    "support": {
-        "docs": "https://docs.mezzio.dev/mezzio/features/template/twig/",
-        "issues": "https://github.com/mezzio/mezzio-twigrenderer/issues",
-        "source": "https://github.com/mezzio/mezzio-twigrenderer",
-        "rss": "https://github.com/mezzio/mezzio-twigrenderer/releases.atom",
-        "chat": "https://laminas.dev/chat",
-        "forum": "https://discourse.laminas.dev"
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "laminas": {
-            "config-provider": "Mezzio\\Twig\\ConfigProvider"
-        }
-    },
+    "license": "BSD-3-Clause",
     "require": {
         "php": "^7.3 || ~8.0.0",
         "laminas/laminas-zendframework-bridge": "^1.0",
@@ -37,13 +21,24 @@
         "psr/container": "^1.0",
         "twig/twig": "^1.42.5 || ^2.12.5 || ^3.0.3"
     },
+    "replace": {
+        "zendframework/zend-expressive-twigrenderer": "^2.5.0"
+    },
+    "conflict": {
+        "container-interop/container-interop": "<1.2.0"
+    },
     "require-dev": {
         "laminas/laminas-coding-standard": "~2.1.0",
         "malukenho/docheader": "^0.1.5",
         "phpunit/phpunit": "^9.3.0"
     },
-    "conflict": {
-        "container-interop/container-interop": "<1.2.0"
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laminas": {
+            "config-provider": "Mezzio\\Twig\\ConfigProvider"
+        }
     },
     "autoload": {
         "psr-4": {
@@ -63,11 +58,16 @@
         ],
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
+        "license-check": "docheader check src/ test/",
         "test": "phpunit --colors=always",
-        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
-        "license-check": "docheader check src/ test/"
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     },
-    "replace": {
-        "zendframework/zend-expressive-twigrenderer": "^2.5.0"
+    "support": {
+        "issues": "https://github.com/mezzio/mezzio-twigrenderer/issues",
+        "forum": "https://discourse.laminas.dev",
+        "chat": "https://laminas.dev/chat",
+        "source": "https://github.com/mezzio/mezzio-twigrenderer",
+        "docs": "https://docs.mezzio.dev/mezzio/features/template/twig/",
+        "rss": "https://github.com/mezzio/mezzio-twigrenderer/releases.atom"
     }
 }
