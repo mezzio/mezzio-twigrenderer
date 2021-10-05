@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/mezzio/mezzio-twigrenderer/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/mezzio/mezzio-twigrenderer/actions/workflows/continuous-integration.yml)
 
-Provides [Twig](http://twig.sensiolabs.org/) integration for
+Provides [Twig](https://twig.symfony.com/) integration for
 [Mezzio](https://docs.laminas.dev//mezzio/).
 
 ## Installation
