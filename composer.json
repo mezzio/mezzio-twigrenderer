@@ -30,7 +30,7 @@
     },
     "require": {
         "php": "^7.3 || ~8.0.0 || ~8.1.0",
-        "laminas/laminas-zendframework-bridge": "^1.0",
+        "laminas/laminas-zendframework-bridge": "^1.4",
         "mezzio/mezzio-helpers": "^5.0",
         "mezzio/mezzio-router": "^3.0",
         "mezzio/mezzio-template": "^2.0",
