@@ -30,7 +30,6 @@
     },
     "require": {
         "php": "^7.3 || ~8.0.0 || ~8.1.0",
-        "laminas/laminas-zendframework-bridge": "^1.4",
         "mezzio/mezzio-helpers": "^5.0",
         "mezzio/mezzio-router": "^3.7",
         "mezzio/mezzio-template": "^2.0",
@@ -42,7 +41,8 @@
         "phpunit/phpunit": "^9.3.0"
     },
     "conflict": {
-        "container-interop/container-interop": "<1.2.0"
+        "container-interop/container-interop": "<1.2.0",
+        "zendframework/zend-expressive-twigrenderer": "*"
     },
     "autoload": {
         "psr-4": {
@@ -63,8 +63,5 @@
         "cs-fix": "phpcbf",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
-    },
-    "replace": {
-        "zendframework/zend-expressive-twigrenderer": "^2.5.0"
     }
 }
