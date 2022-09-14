@@ -17,14 +17,14 @@ use function sprintf;
 
 class TwigExtensionFactoryTest extends TestCase
 {
-    /** @var MockObject<ContainerInterface> */
-    private $container;
+    /** @var MockObject&ContainerInterface */
+    private ContainerInterface $container;
 
-    /** @var MockObject<ServerUrlHelper> */
-    private $serverUrlHelper;
+    /** @var MockObject&ServerUrlHelper */
+    private ServerUrlHelper $serverUrlHelper;
 
-    /** @var MockObject<UrlHelper> */
-    private $urlHelper;
+    /** @var MockObject&UrlHelper */
+    private UrlHelper $urlHelper;
 
     protected function setUp(): void
     {

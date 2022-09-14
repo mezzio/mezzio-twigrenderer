@@ -24,8 +24,8 @@ use const E_USER_DEPRECATED;
 
 class TwigRendererFactoryTest extends TestCase
 {
-    /** @var MockObject<ContainerInterface> */
-    private $container;
+    /** @var MockObject&ContainerInterface */
+    private ContainerInterface $container;
 
     /** @var callable */
     private $errorHandler;
@@ -62,9 +62,7 @@ class TwigRendererFactoryTest extends TestCase
         $environmentFactory = new TwigEnvironmentFactory();
         $container          = $this->container;
         $this->container->expects(self::atLeastOnce())->method('get')->with(Environment::class)->willReturnCallback(
-            function () use ($environmentFactory, $container) {
-                return $environmentFactory($container);
-            }
+            static fn() => $environmentFactory($container)
         );
 
         $factory = new TwigRendererFactory();
@@ -100,7 +98,7 @@ class TwigRendererFactoryTest extends TestCase
         $environmentFactory = new TwigEnvironmentFactory();
         $container          = $this->container;
         $this->container->expects(self::atLeastOnce())->method('get')->willReturnCallback(
-            function (string $id) use ($config, $environmentFactory, $container) {
+            static function (string $id) use ($config, $environmentFactory, $container) {
                 switch ($id) {
                     case 'config':
                         return $config;
@@ -132,7 +130,7 @@ class TwigRendererFactoryTest extends TestCase
         $environmentFactory = new TwigEnvironmentFactory();
         $container          = $this->container;
         $this->container->expects(self::atLeastOnce())->method('get')->willReturnCallback(
-            function (string $id) use ($config, $environmentFactory, $container) {
+            static function (string $id) use ($config, $environmentFactory, $container) {
                 switch ($id) {
                     case 'config':
                         return $config;
@@ -239,7 +237,7 @@ class TwigRendererFactoryTest extends TestCase
         $factory = new TwigRendererFactory();
 
         $this->errorHandler = set_error_handler(
-            function ($errno, $errstr) {
+            function ($errno, $errstr): bool {
                 $this->assertStringContainsString(Environment::class, $errstr);
                 return true;
             },

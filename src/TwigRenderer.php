@@ -28,8 +28,7 @@ class TwigRenderer implements TemplateRendererInterface
     use ArrayParametersTrait;
     use DefaultParamsTrait;
 
-    /** @var string */
-    private $suffix;
+    private string $suffix;
     /** @var FilesystemLoader */
     protected $twigLoader;
     /** @var Environment */

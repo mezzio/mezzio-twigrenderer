@@ -25,8 +25,8 @@ use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
 class TwigEnvironmentFactoryTest extends TestCase
 {
-    /** @var MockObject<ContainerInterface> */
-    private $container;
+    /** @var MockObject&ContainerInterface */
+    private ContainerInterface $container;
 
     protected function setUp(): void
     {
@@ -95,7 +95,7 @@ class TwigEnvironmentFactoryTest extends TestCase
 
         $container = $this->container;
         $this->container->expects(self::atLeastOnce())->method('get')->willReturnCallback(
-            function (string $id) use ($twigExtensionFactory, $serverUrlHelper, $urlHelper, $container) {
+            static function (string $id) use ($twigExtensionFactory, $serverUrlHelper, $urlHelper, $container) {
                 switch ($id) {
                     case TwigExtension::class:
                         return $twigExtensionFactory($container);
