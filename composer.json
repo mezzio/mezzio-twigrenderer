@@ -43,7 +43,7 @@
         "twig/twig": "^3.3.8"
     },
     "require-dev": {
-        "laminas/laminas-coding-standard": "~2.2.0",
+        "laminas/laminas-coding-standard": "~2.4.0",
         "phpunit/phpunit": "^9.5.24"
     },
     "conflict": {
