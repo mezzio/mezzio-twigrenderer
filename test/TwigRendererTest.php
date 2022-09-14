@@ -20,8 +20,7 @@ use function var_export;
 
 class TwigRendererTest extends TestCase
 {
-    /** @var Environment */
-    private $twigEnvironment;
+    private Environment $twigEnvironment;
 
     protected function setUp(): void
     {

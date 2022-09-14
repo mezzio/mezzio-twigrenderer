@@ -15,20 +15,16 @@ use Twig\TwigFunction;
  */
 class TwigExtension extends AbstractExtension implements GlobalsInterface
 {
-    /** @var ServerUrlHelper */
-    private $serverUrlHelper;
+    private ServerUrlHelper $serverUrlHelper;
 
-    /** @var UrlHelper */
-    private $urlHelper;
+    private UrlHelper $urlHelper;
 
-    /** @var null|string */
-    private $assetsUrl;
+    private ?string $assetsUrl;
 
     /** @var null|string|int */
     private $assetsVersion;
 
-    /** @var array */
-    private $globals;
+    private array $globals;
 
     /**
      * @param null|string|int $assetsVersion

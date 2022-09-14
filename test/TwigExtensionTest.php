@@ -15,11 +15,11 @@ use function sprintf;
 
 class TwigExtensionTest extends TestCase
 {
-    /** @var MockObject<ServerUrlHelper> */
-    private $serverUrlHelper;
+    /** @var MockObject&ServerUrlHelper */
+    private ServerUrlHelper $serverUrlHelper;
 
-    /** @var MockObject<UrlHelper> */
-    private $urlHelper;
+    /** @var MockObject&UrlHelper */
+    private UrlHelper $urlHelper;
 
     protected function setUp(): void
     {
