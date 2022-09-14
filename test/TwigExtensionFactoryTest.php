@@ -54,7 +54,7 @@ class TwigExtensionFactoryTest extends TestCase
         $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap([
             [ServerUrlHelper::class, true],
             [UrlHelper::class, false],
-            [Zend\Expressive\Helper\UrlHelper::class, false],
+            ['Zend\Expressive\Helper\UrlHelper', false],
         ]);
 
         $this->expectException(InvalidConfigException::class);
