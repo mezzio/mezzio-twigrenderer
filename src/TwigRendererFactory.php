@@ -32,7 +32,8 @@ class TwigRendererFactory
     {
         $config      = $container->has('config') ? $container->get('config') : [];
         $config      = self::mergeConfig($config);
-        $environment = $this->getEnvironment($container);
+        /** @var Environment */
+        $environment = $container->get(Environment::class);
 
         return new TwigRenderer($environment, $config['extension'] ?? 'html.twig');
     }
@@ -66,35 +67,5 @@ class TwigRendererFactory
             : [];
 
         return array_replace_recursive($mezzioConfig, $twigConfig);
-    }
-
-    /**
-     * Retrieve and return the TwigEnvironment instance.
-     *
-     * If upgrading from a previous version of this package, developers will
-     * not have registered the TwigEnvironment service yet; this method will
-     * create it using the TwigEnvironmentFactory, but emit a deprecation
-     * notice indicating the developer should update their configuration.
-     *
-     * If the service is registered, it is simply pulled and returned.
-     *
-     * @throws LoaderError
-     */
-    private function getEnvironment(ContainerInterface $container): Environment
-    {
-        if ($container->has(Environment::class)) {
-            return $container->get(Environment::class);
-        }
-
-        trigger_error(sprintf(
-            '%s now expects you to register the factory %s for the service %s; '
-            . 'please update your dependency configuration.',
-            self::class,
-            TwigEnvironmentFactory::class,
-            Environment::class
-        ), E_USER_DEPRECATED);
-
-        $factory = new TwigEnvironmentFactory();
-        return $factory($container);
     }
 }
