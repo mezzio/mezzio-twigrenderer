@@ -17,10 +17,7 @@ use ReflectionProperty;
 use Twig\Environment;
 
 use function restore_error_handler;
-use function set_error_handler;
 use function sprintf;
-
-use const E_USER_DEPRECATED;
 
 class TwigRendererFactoryTest extends TestCase
 {
@@ -228,24 +225,6 @@ class TwigRendererFactoryTest extends TestCase
             }
         }
         $this->assertContains($expected, $found, $message);
-    }
-
-    public function testCallingFactoryWithoutTwigEnvironmentServiceEmitsDeprecationNotice(): void
-    {
-        $this->container->expects(self::exactly(4))->method('has')->willReturn(false);
-
-        $factory = new TwigRendererFactory();
-
-        $this->errorHandler = set_error_handler(
-            function ($errno, $errstr): bool {
-                $this->assertStringContainsString(Environment::class, $errstr);
-                return true;
-            },
-            E_USER_DEPRECATED
-        );
-
-        $twig = $factory($this->container);
-        $this->assertInstanceOf(TwigRenderer::class, $twig);
     }
 
     public function testMergeConfigRaisesExceptionForInvalidConfig(): void

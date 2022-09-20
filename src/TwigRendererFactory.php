@@ -15,9 +15,6 @@ use function gettype;
 use function is_array;
 use function is_object;
 use function sprintf;
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
 
 /**
  * Create and return a Twig template instance.
@@ -30,8 +27,8 @@ class TwigRendererFactory
      */
     public function __invoke(ContainerInterface $container): TwigRenderer
     {
-        $config      = $container->has('config') ? $container->get('config') : [];
-        $config      = self::mergeConfig($config);
+        $config = $container->has('config') ? $container->get('config') : [];
+        $config = self::mergeConfig($config);
         /** @var Environment */
         $environment = $container->get(Environment::class);
 
