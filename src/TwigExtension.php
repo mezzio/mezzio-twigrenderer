@@ -15,14 +15,11 @@ use Twig\TwigFunction;
  */
 class TwigExtension extends AbstractExtension implements GlobalsInterface
 {
-    /**
-     * @param null|string|int $assetsVersion
-     */
     public function __construct(
         private ServerUrlHelper $serverUrlHelper,
         private UrlHelper $urlHelper,
         private ?string $assetsUrl,
-        private $assetsVersion,
+        private null|string|int $assetsVersion,
         private array $globals = []
     ) {
     }
