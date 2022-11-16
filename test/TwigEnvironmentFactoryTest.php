@@ -135,9 +135,8 @@ class TwigEnvironmentFactoryTest extends TestCase
 
     /**
      * @dataProvider invalidExtensions
-     * @param mixed $extension
      */
-    public function testRaisesExceptionForInvalidExtensions($extension): void
+    public function testRaisesExceptionForInvalidExtensions(mixed $extension): void
     {
         $config = [
             'templates' => [],
@@ -176,9 +175,8 @@ class TwigEnvironmentFactoryTest extends TestCase
 
     /**
      * @dataProvider invalidConfiguration
-     * @param mixed $config
      */
-    public function testRaisesExceptionForInvalidConfigService($config, string $contains): void
+    public function testRaisesExceptionForInvalidConfigService(mixed $config, string $contains): void
     {
         $this->container->expects(self::atLeastOnce())->method('has')->with('config')->willReturn(true);
         $this->container->expects(self::atLeastOnce())->method('get')->with('config')->willReturn($config);
@@ -263,9 +261,8 @@ class TwigEnvironmentFactoryTest extends TestCase
 
     /**
      * @dataProvider invalidRuntimeLoaders
-     * @param mixed $runtimeLoader
      */
-    public function testRaisesExceptionForInvalidRuntimeLoaders($runtimeLoader): void
+    public function testRaisesExceptionForInvalidRuntimeLoaders(mixed $runtimeLoader): void
     {
         $config = [
             'templates' => [],

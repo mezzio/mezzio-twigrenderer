@@ -61,9 +61,6 @@ class TwigExtensionFunctionsRenderTest extends TestCase
 
     /**
      * @dataProvider renderPathProvider
-     * @param array $routeParams
-     * @param array $queryParams
-     * @param array $options
      */
     public function testPathFunction(
         string $template,
@@ -139,9 +136,6 @@ class TwigExtensionFunctionsRenderTest extends TestCase
 
     /**
      * @dataProvider renderUrlProvider
-     * @param array $routeParams
-     * @param array $queryParams
-     * @param array $options
      */
     public function testUrlFunction(
         string $template,

@@ -15,33 +15,13 @@ use Twig\TwigFunction;
  */
 class TwigExtension extends AbstractExtension implements GlobalsInterface
 {
-    private ServerUrlHelper $serverUrlHelper;
-
-    private UrlHelper $urlHelper;
-
-    private ?string $assetsUrl;
-
-    /** @var null|string|int */
-    private $assetsVersion;
-
-    private array $globals;
-
-    /**
-     * @param null|string|int $assetsVersion
-     * @param array $globals
-     */
     public function __construct(
-        ServerUrlHelper $serverUrlHelper,
-        UrlHelper $urlHelper,
-        ?string $assetsUrl,
-        $assetsVersion,
-        array $globals = []
+        private ServerUrlHelper $serverUrlHelper,
+        private UrlHelper $urlHelper,
+        private ?string $assetsUrl,
+        private null|string|int $assetsVersion,
+        private array $globals = []
     ) {
-        $this->serverUrlHelper = $serverUrlHelper;
-        $this->urlHelper       = $urlHelper;
-        $this->assetsUrl       = $assetsUrl;
-        $this->assetsVersion   = $assetsVersion;
-        $this->globals         = $globals;
     }
 
     public function getGlobals(): array

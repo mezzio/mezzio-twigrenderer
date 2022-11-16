@@ -42,7 +42,7 @@ class TwigRenderer implements TemplateRendererInterface
 
         try {
             $loader = $template->getLoader();
-        } catch (LogicException $e) {
+        } catch (LogicException) {
             $loader = $this->getDefaultLoader();
             $template->setLoader($loader);
         }

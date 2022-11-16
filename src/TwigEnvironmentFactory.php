@@ -20,10 +20,8 @@ use Twig\NodeVisitor\OptimizerNodeVisitor;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
 use function get_debug_type;
-use function gettype;
 use function is_array;
 use function is_numeric;
-use function is_object;
 use function is_string;
 use function sprintf;
 
@@ -107,7 +105,7 @@ class TwigEnvironmentFactory
             }
             try {
                 $timezone = new DateTimeZone($timezone);
-            } catch (BaseException $e) {
+            } catch (BaseException) {
                 throw new Exception\InvalidConfigException(sprintf('Unknown or invalid timezone: "%s"', $timezone));
             }
             $environment->getExtension(CoreExtension::class)->setTimezone($timezone);
@@ -155,8 +153,6 @@ class TwigEnvironmentFactory
 
     /**
      * Inject extensions into the TwigEnvironment instance.
-     *
-     * @param array $extensions
      */
     private function injectExtensions(
         Environment $environment,
@@ -201,8 +197,6 @@ class TwigEnvironmentFactory
 
     /**
      * Inject Runtime Loaders into the TwigEnvironment instance.
-     *
-     * @param array $runtimes
      */
     private function injectRuntimeLoaders(
         Environment $environment,
@@ -229,7 +223,7 @@ class TwigEnvironmentFactory
             throw new Exception\InvalidRuntimeLoaderException(sprintf(
                 'Twig runtime loader must be an instance of %s; "%s" given,',
                 RuntimeLoaderInterface::class,
-                is_object($runtimeLoader) ? $runtimeLoader::class : gettype($runtimeLoader)
+                get_debug_type($runtimeLoader)
             ));
         }
 

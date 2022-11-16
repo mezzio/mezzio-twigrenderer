@@ -59,7 +59,7 @@ class TwigRendererFactoryTest extends TestCase
         $environmentFactory = new TwigEnvironmentFactory();
         $container          = $this->container;
         $this->container->expects(self::atLeastOnce())->method('get')->with(Environment::class)->willReturnCallback(
-            static fn() => $environmentFactory($container)
+            static fn(): Environment => $environmentFactory($container)
         );
 
         $factory = new TwigRendererFactory();
