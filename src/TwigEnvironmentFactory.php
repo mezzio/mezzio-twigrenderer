@@ -19,7 +19,7 @@ use Twig\Loader\FilesystemLoader;
 use Twig\NodeVisitor\OptimizerNodeVisitor;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
-use function get_class;
+use function get_debug_type;
 use function gettype;
 use function is_array;
 use function is_numeric;
@@ -82,7 +82,7 @@ class TwigEnvironmentFactory
             throw new Exception\InvalidConfigException(sprintf(
                 '"config" service must be an array or ArrayObject for the %s to be able to consume it; received %s',
                 self::class,
-                is_object($config) ? get_class($config) : gettype($config)
+                get_debug_type($config)
             ));
         }
 
@@ -166,7 +166,7 @@ class TwigEnvironmentFactory
         foreach ($extensions as $extension) {
             $extension = $this->loadExtension($extension, $container);
 
-            if (! $environment->hasExtension(get_class($extension))) {
+            if (! $environment->hasExtension($extension::class)) {
                 $environment->addExtension($extension);
             }
         }
@@ -192,7 +192,7 @@ class TwigEnvironmentFactory
             throw new Exception\InvalidExtensionException(sprintf(
                 'Twig extension must be an instance of %s; "%s" given,',
                 ExtensionInterface::class,
-                is_object($extension) ? get_class($extension) : gettype($extension)
+                get_debug_type($extension)
             ));
         }
 
@@ -229,7 +229,7 @@ class TwigEnvironmentFactory
             throw new Exception\InvalidRuntimeLoaderException(sprintf(
                 'Twig runtime loader must be an instance of %s; "%s" given,',
                 RuntimeLoaderInterface::class,
-                is_object($runtimeLoader) ? get_class($runtimeLoader) : gettype($runtimeLoader)
+                is_object($runtimeLoader) ? $runtimeLoader::class : gettype($runtimeLoader)
             ));
         }
 
