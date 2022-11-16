@@ -163,12 +163,12 @@ class TwigEnvironmentFactoryTest extends TestCase
     {
         //                        [Config value, Type]
         return [
-            'true'             => [true, 'boolean'],
-            'false'            => [false, 'boolean'],
-            'zero'             => [0, 'integer'],
-            'int'              => [1, 'integer'],
-            'zero-float'       => [0.0, 'double'],
-            'float'            => [1.1, 'double'],
+            'true'             => [true, 'bool'],
+            'false'            => [false, 'bool'],
+            'zero'             => [0, 'int'],
+            'int'              => [1, 'int'],
+            'zero-float'       => [0.0, 'float'],
+            'float'            => [1.1, 'float'],
             'string'           => ['not-configuration', 'string'],
             'non-array-object' => [(object) ['not' => 'configuration'], 'stdClass'],
         ];
