@@ -10,10 +10,8 @@ use Twig\Environment;
 use Twig\Error\LoaderError;
 
 use function array_replace_recursive;
-use function get_class;
-use function gettype;
+use function get_debug_type;
 use function is_array;
-use function is_object;
 use function sprintf;
 
 /**
@@ -52,7 +50,7 @@ class TwigRendererFactory
         if (! is_array($config)) {
             throw new Exception\InvalidConfigException(sprintf(
                 'Config service MUST be an array or ArrayObject; received %s',
-                is_object($config) ? get_class($config) : gettype($config)
+                get_debug_type($config)
             ));
         }
 
