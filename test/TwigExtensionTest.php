@@ -58,7 +58,6 @@ class TwigExtensionTest extends TestCase
     }
 
     /**
-     * @param array $functions
      * @return false|TwigFunction
      */
     public function findFunction(string $name, array $functions)
