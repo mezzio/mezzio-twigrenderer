@@ -8,6 +8,7 @@ use ArrayObject;
 use Mezzio\Template\Exception;
 use Mezzio\Template\TemplatePath;
 use Mezzio\Twig\TwigRenderer;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -124,7 +125,7 @@ class TwigRendererTest extends TestCase
     /**
      * @return array<string, array<bool|int|string>>
      */
-    public function invalidParameterValues(): array
+    public static function invalidParameterValues(): array
     {
         return [
             'true'       => [true],
@@ -137,9 +138,7 @@ class TwigRendererTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidParameterValues
-     */
+    #[DataProvider('invalidParameterValues')]
     public function testRenderRaisesExceptionForInvalidParameterTypes(mixed $params): void
     {
         $renderer = new TwigRenderer();
@@ -159,7 +158,7 @@ class TwigRendererTest extends TestCase
     /**
      * @return array<string, array<mixed>>
      */
-    public function objectParameterValues(): array
+    public static function objectParameterValues(): array
     {
         $names = [
             'stdClass'    => uniqid(),
@@ -172,9 +171,7 @@ class TwigRendererTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider objectParameterValues
-     */
+    #[DataProvider('objectParameterValues')]
     public function testCanRenderWithParameterObjects(object $params, string $search): void
     {
         $renderer = new TwigRenderer();

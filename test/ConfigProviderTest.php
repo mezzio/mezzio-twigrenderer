@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MezzioTest\Twig;
 
 use Mezzio\Twig\ConfigProvider;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 
 class ConfigProviderTest extends TestCase
@@ -28,9 +29,9 @@ class ConfigProviderTest extends TestCase
     }
 
     /**
-     * @depends testInvocationReturnsArray
      * @param array<string, mixed> $config
      */
+    #[Depends('testInvocationReturnsArray')]
     public function testReturnedArrayContainsDependencies(array $config): void
     {
         $this->assertArrayHasKey('dependencies', $config);

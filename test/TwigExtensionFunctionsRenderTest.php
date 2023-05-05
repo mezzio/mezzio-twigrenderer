@@ -7,6 +7,7 @@ namespace MezzioTest\Twig;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Twig\TwigExtension;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
@@ -59,9 +60,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
         return $twig;
     }
 
-    /**
-     * @dataProvider renderPathProvider
-     */
+    #[DataProvider('renderPathProvider')]
     public function testPathFunction(
         string $template,
         string $route,
@@ -88,7 +87,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
     /**
      * @return array<string, array<mixed>>
      */
-    public function renderPathProvider(): array
+    public static function renderPathProvider(): array
     {
         return [
             'path'                   => [
@@ -134,9 +133,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider renderUrlProvider
-     */
+    #[DataProvider('renderUrlProvider')]
     public function testUrlFunction(
         string $template,
         string $route,
@@ -165,7 +162,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
     /**
      * @return array<string, array<mixed>>
      */
-    public function renderUrlProvider(): array
+    public static function renderUrlProvider(): array
     {
         return [
             'path'                   => [

@@ -44,7 +44,7 @@
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~2.5.0",
-        "phpunit/phpunit": "^9.6.7"
+        "phpunit/phpunit": "^10.1.2"
     },
     "conflict": {
         "container-interop/container-interop": "<1.2.0",
