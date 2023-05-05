@@ -18,11 +18,11 @@ class TwigExtensionFunctionsRenderTest extends TestCase
 {
     /** @var string[] */
     protected $templates;
-    /** @var MockObject<LoaderInterface> */
+    /** @var MockObject&LoaderInterface */
     protected $twigLoader;
-    /** @var MockObject<ServerUrlHelper> */
+    /** @var MockObject&ServerUrlHelper */
     protected $serverUrlHelper;
-    /** @var MockObject<UrlHelper> */
+    /** @var MockObject&UrlHelper */
     protected $urlHelper;
 
     protected function setUp(): void

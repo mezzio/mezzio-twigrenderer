@@ -6,7 +6,6 @@ namespace Mezzio\Twig;
 
 use Mezzio\Template\TemplateRendererInterface;
 use Twig\Environment;
-use Twig_Environment;
 
 class ConfigProvider
 {
@@ -23,13 +22,13 @@ class ConfigProvider
         return [
             'aliases'   => [
                 TemplateRendererInterface::class => TwigRenderer::class,
-                Twig_Environment::class          => Environment::class,
+                'Twig_Environment'               => Environment::class,
 
                 // Legacy Zend Framework aliases
-                \Zend\Expressive\Template\TemplateRendererInterface::class => TemplateRendererInterface::class,
-                \Zend\Expressive\Twig\Twig_Environment::class              => Twig_Environment::class,
-                \Zend\Expressive\Twig\TwigExtension::class                 => TwigExtension::class,
-                \Zend\Expressive\Twig\TwigRenderer::class                  => TwigRenderer::class,
+                'Zend\Expressive\Template\TemplateRendererInterface' => TemplateRendererInterface::class,
+                'Zend\Expressive\Twig\Twig_Environment'              => Twig_Environment::class,
+                'Zend\Expressive\Twig\TwigExtension'                 => TwigExtension::class,
+                'Zend\Expressive\Twig\TwigRenderer'                  => TwigRenderer::class,
             ],
             'factories' => [
                 Environment::class   => TwigEnvironmentFactory::class,
