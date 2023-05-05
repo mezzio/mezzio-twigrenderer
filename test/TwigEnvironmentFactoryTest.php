@@ -13,6 +13,8 @@ use Mezzio\Twig\Exception\InvalidRuntimeLoaderException;
 use Mezzio\Twig\TwigEnvironmentFactory;
 use Mezzio\Twig\TwigExtension;
 use Mezzio\Twig\TwigExtensionFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -60,9 +62,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->assertTrue($environment->isAutoReload());
     }
 
-    /**
-     * @depends testCallingFactoryWithNoConfigReturnsTwigEnvironmentInstance
-     */
+    #[Depends('testCallingFactoryWithNoConfigReturnsTwigEnvironmentInstance')]
     public function testDebugDisabledSetsUpEnvironmentForProduction(TwigEnvironment $environment): void
     {
         $this->assertFalse($environment->isDebug());
@@ -117,7 +117,7 @@ class TwigEnvironmentFactoryTest extends TestCase
     /**
      * @return array<string, array<mixed>>
      */
-    public function invalidExtensions(): array
+    public static function invalidExtensions(): array
     {
         return [
             'null'                  => [null],
@@ -133,9 +133,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidExtensions
-     */
+    #[DataProvider('invalidExtensions')]
     public function testRaisesExceptionForInvalidExtensions(mixed $extension): void
     {
         $config = [
@@ -158,7 +156,7 @@ class TwigEnvironmentFactoryTest extends TestCase
     /**
      * @return array<string, mixed>
      */
-    public function invalidConfiguration(): array
+    public static function invalidConfiguration(): array
     {
         //                        [Config value, Type]
         return [
@@ -173,9 +171,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidConfiguration
-     */
+    #[DataProvider('invalidConfiguration')]
     public function testRaisesExceptionForInvalidConfigService(mixed $config, string $contains): void
     {
         $this->container->expects(self::atLeastOnce())->method('has')->with('config')->willReturn(true);
@@ -243,7 +239,7 @@ class TwigEnvironmentFactoryTest extends TestCase
     /**
      * @return array<string, mixed>
      */
-    public function invalidRuntimeLoaders(): array
+    public static function invalidRuntimeLoaders(): array
     {
         return [
             'null'                  => [null],
@@ -259,9 +255,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidRuntimeLoaders
-     */
+    #[DataProvider('invalidRuntimeLoaders')]
     public function testRaisesExceptionForInvalidRuntimeLoaders(mixed $runtimeLoader): void
     {
         $config = [

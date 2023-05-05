@@ -10,6 +10,7 @@ use Mezzio\Twig\TwigEnvironmentFactory;
 use Mezzio\Twig\TwigExtension;
 use Mezzio\Twig\TwigRenderer;
 use Mezzio\Twig\TwigRendererFactory;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -69,9 +70,7 @@ class TwigRendererFactoryTest extends TestCase
         return $twig;
     }
 
-    /**
-     * @depends testCallingFactoryWithNoConfigReturnsTwigInstance
-     */
+    #[Depends('testCallingFactoryWithNoConfigReturnsTwigInstance')]
     public function testUnconfiguredTwigInstanceContainsNoPaths(TwigRenderer $twig): void
     {
         $paths = $twig->getPaths();

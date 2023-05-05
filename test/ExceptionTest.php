@@ -7,6 +7,7 @@ namespace MezzioTest\Twig;
 use Generator;
 use Mezzio\Template\Exception\ExceptionInterface as TemplateExceptionInterface;
 use Mezzio\Twig\Exception\ExceptionInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 use function basename;
@@ -22,7 +23,7 @@ class ExceptionTest extends TestCase
         $this->assertTrue(is_a(ExceptionInterface::class, TemplateExceptionInterface::class, true));
     }
 
-    public function exception(): Generator
+    public static function exception(): Generator
     {
         $namespace = substr(ExceptionInterface::class, 0, strrpos(ExceptionInterface::class, '\\') + 1);
 
@@ -34,9 +35,7 @@ class ExceptionTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider exception
-     */
+    #[DataProvider('exception')]
     public function testExceptionIsInstanceOfExceptionInterface(string $exception): void
     {
         $this->assertStringContainsString('Exception', $exception);

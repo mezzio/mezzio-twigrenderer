@@ -7,6 +7,7 @@ namespace MezzioTest\Twig;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Twig\TwigExtension;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Twig\TwigFunction;
@@ -142,7 +143,7 @@ class TwigExtensionTest extends TestCase
     /**
      * @return array<string, array<null|string>>
      */
-    public function emptyAssetVersions(): array
+    public static function emptyAssetVersions(): array
     {
         return [
             'null'         => [null],
@@ -150,9 +151,7 @@ class TwigExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider emptyAssetVersions
-     */
+    #[DataProvider('emptyAssetVersions')]
     public function testRenderAssetUrlWithoutProvidedVersion(?string $emptyValue): void
     {
         $extension = $this->createExtension('https://images.example.com/', $emptyValue);
@@ -165,7 +164,7 @@ class TwigExtensionTest extends TestCase
     /**
      * @return array<string, array<int|string>>
      */
-    public function zeroAssetVersions(): array
+    public static function zeroAssetVersions(): array
     {
         return [
             'zero'        => [0],
@@ -173,11 +172,8 @@ class TwigExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider zeroAssetVersions
-     * @param int|string $zeroValue
-     */
-    public function testRendersZeroVersionAssetUrl($zeroValue): void
+    #[DataProvider('zeroAssetVersions')]
+    public function testRendersZeroVersionAssetUrl(int|string $zeroValue): void
     {
         $extension = $this->createExtension('https://images.example.com/', $zeroValue);
         $this->assertSame(
