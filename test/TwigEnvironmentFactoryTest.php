@@ -25,6 +25,8 @@ use Twig\Extension\EscaperExtension;
 use Twig\Extension\OptimizerExtension;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
+use function assert;
+
 class TwigEnvironmentFactoryTest extends TestCase
 {
     /** @var MockObject&ContainerInterface */
@@ -185,7 +187,8 @@ class TwigEnvironmentFactoryTest extends TestCase
 
     public function testUsesTimezoneConfiguration(): void
     {
-        $tz     = DateTimeZone::listIdentifiers()[0];
+        $tz = DateTimeZone::listIdentifiers()[0];
+        assert($tz !== '');
         $config = [
             'twig' => [
                 'timezone' => $tz,
