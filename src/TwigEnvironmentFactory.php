@@ -100,7 +100,7 @@ class TwigEnvironmentFactory
 
         if (isset($config['timezone'])) {
             $timezone = $config['timezone'];
-            if (! is_string($timezone)) {
+            if (! is_string($timezone) || $timezone === '') {
                 throw new Exception\InvalidConfigException('"timezone" configuration value must be a string');
             }
             try {
