@@ -96,7 +96,7 @@ class TwigRenderer implements TemplateRendererInterface
      */
     public function addPath(string $path, ?string $namespace = null): void
     {
-        $namespace = $namespace ?: FilesystemLoader::MAIN_NAMESPACE;
+        $namespace = $namespace ?? FilesystemLoader::MAIN_NAMESPACE;
         $this->twigLoader->addPath($path, $namespace);
     }
 

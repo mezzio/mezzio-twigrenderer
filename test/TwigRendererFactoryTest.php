@@ -177,7 +177,7 @@ class TwigRendererFactoryTest extends TestCase
 
     public function assertPathsHasNamespace(?string $namespace, array $paths, ?string $message = null): void
     {
-        $message = $message ?: sprintf('Paths do not contain namespace %s', $namespace ?: 'null');
+        $message = $message ?? sprintf('Paths do not contain namespace %s', $namespace ?? 'null');
 
         $found = false;
         foreach ($paths as $path) {
@@ -196,7 +196,7 @@ class TwigRendererFactoryTest extends TestCase
         array $paths,
         ?string $message = null
     ): void {
-        $message = $message ?: sprintf('Did not find %d paths with namespace %s', $expected, $namespace ?: 'null');
+        $message = $message ?? sprintf('Did not find %d paths with namespace %s', $expected, $namespace ?? 'null');
 
         $count = 0;
         foreach ($paths as $path) {
@@ -214,7 +214,7 @@ class TwigRendererFactoryTest extends TestCase
         array $paths,
         ?string $message = null
     ): void {
-        $message = $message ?: sprintf('Did not find path %s in namespace %s', $expected, $namespace ?: null);
+        $message = $message ?? sprintf('Did not find path %s in namespace %s', $expected, $namespace ?? 'null');
 
         $found = [];
         foreach ($paths as $path) {

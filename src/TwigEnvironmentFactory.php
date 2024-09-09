@@ -141,7 +141,7 @@ class TwigEnvironmentFactory
         $allPaths = isset($config['paths']) && is_array($config['paths']) ? $config['paths'] : [];
         foreach ($allPaths as $namespace => $paths) {
             $namespace = is_numeric($namespace) ? null : $namespace;
-            $namespace = $namespace ?: FilesystemLoader::MAIN_NAMESPACE;
+            $namespace = $namespace ?? FilesystemLoader::MAIN_NAMESPACE;
             foreach ((array) $paths as $path) {
                 $loader->addPath($path, $namespace);
             }
