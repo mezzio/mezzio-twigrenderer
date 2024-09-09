@@ -33,7 +33,7 @@ class TwigRendererTest extends TestCase
         TemplatePath $received,
         ?string $message = null
     ): void {
-        $message = $message ?: 'Failed to assert TemplatePaths are equal';
+        $message = $message ?? 'Failed to assert TemplatePaths are equal';
         if (
             $expected->getPath() !== $received->getPath()
             || $expected->getNamespace() !== $received->getNamespace()
@@ -70,19 +70,19 @@ class TwigRendererTest extends TestCase
 
     public function assertTemplatePath(string $path, TemplatePath $templatePath, ?string $message = null): void
     {
-        $message = $message ?: sprintf('Failed to assert TemplatePath contained path %s', $path);
+        $message = $message ?? sprintf('Failed to assert TemplatePath contained path %s', $path);
         $this->assertEquals($path, $templatePath->getPath(), $message);
     }
 
     public function assertTemplatePathString(string $path, TemplatePath $templatePath, ?string $message = null): void
     {
-        $message = $message ?: sprintf('Failed to assert TemplatePath casts to string path %s', $path);
+        $message = $message ?? sprintf('Failed to assert TemplatePath casts to string path %s', $path);
         $this->assertEquals($path, (string) $templatePath, $message);
     }
 
     public function assertEmptyTemplatePathNamespace(TemplatePath $templatePath, ?string $message = null): void
     {
-        $message = $message ?: 'Failed to assert TemplatePath namespace was empty';
+        $message = $message ?? 'Failed to assert TemplatePath namespace was empty';
         $this->assertEmpty($templatePath->getNamespace(), $message);
     }
 
@@ -103,7 +103,7 @@ class TwigRendererTest extends TestCase
         TemplatePath $templatePath,
         ?string $message = null
     ): void {
-        $message = $message ?: sprintf(
+        $message = $message ?? sprintf(
             'Failed to assert TemplatePath namespace matched %s',
             var_export($namespace, true)
         );

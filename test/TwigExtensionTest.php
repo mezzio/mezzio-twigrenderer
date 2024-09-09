@@ -53,7 +53,7 @@ class TwigExtensionTest extends TestCase
 
     public function assertFunctionExists(string $name, array $functions, ?string $message = null): void
     {
-        $message  = $message ?: sprintf('Failed to identify function by name %s', $name);
+        $message  = $message ?? sprintf('Failed to identify function by name %s', $name);
         $function = $this->findFunction($name, $functions);
         $this->assertInstanceOf(TwigFunction::class, $function, $message);
     }

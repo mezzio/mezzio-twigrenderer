@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.17.0@c620f6e80d0abfca532b00bda366062aaedf6e5d">
+<files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="src/ConfigProvider.php">
     <UndefinedClass>
-      <code>Twig_Environment</code>
+      <code><![CDATA[Twig_Environment]]></code>
     </UndefinedClass>
   </file>
   <file src="src/TwigEnvironmentFactory.php">
     <InternalClass>
-      <code>OptimizerNodeVisitor::OPTIMIZE_ALL</code>
+      <code><![CDATA[OptimizerNodeVisitor::OPTIMIZE_ALL]]></code>
     </InternalClass>
     <MixedArgument>
       <code><![CDATA[$container->get(TwigExtension::class)]]></code>
-      <code>$extension</code>
-      <code>$path</code>
-      <code>$runtimeLoader</code>
+      <code><![CDATA[$extension]]></code>
+      <code><![CDATA[$path]]></code>
+      <code><![CDATA[$runtimeLoader]]></code>
     </MixedArgument>
     <MixedAssignment>
-      <code>$extension</code>
-      <code>$extension</code>
-      <code>$path</code>
-      <code>$paths</code>
-      <code>$runtimeLoader</code>
-      <code>$runtimeLoader</code>
+      <code><![CDATA[$extension]]></code>
+      <code><![CDATA[$extension]]></code>
+      <code><![CDATA[$path]]></code>
+      <code><![CDATA[$paths]]></code>
+      <code><![CDATA[$runtimeLoader]]></code>
+      <code><![CDATA[$runtimeLoader]]></code>
     </MixedAssignment>
     <PossiblyInvalidArgument>
-      <code>$timezone</code>
+      <code><![CDATA[$timezone]]></code>
     </PossiblyInvalidArgument>
   </file>
   <file src="src/TwigExtension.php">
     <ArgumentTypeCoercion>
-      <code>$route</code>
+      <code><![CDATA[$route]]></code>
     </ArgumentTypeCoercion>
     <MixedArgumentTypeCoercion>
-      <code>$options</code>
-      <code>$queryParams</code>
-      <code>$routeParams</code>
+      <code><![CDATA[$options]]></code>
+      <code><![CDATA[$queryParams]]></code>
+      <code><![CDATA[$routeParams]]></code>
     </MixedArgumentTypeCoercion>
     <MixedReturnTypeCoercion>
       <code><![CDATA[$this->globals]]></code>
-      <code>array</code>
+      <code><![CDATA[array]]></code>
     </MixedReturnTypeCoercion>
     <PossiblyNullOperand>
       <code><![CDATA[$this->assetsUrl]]></code>
@@ -46,7 +46,7 @@
   </file>
   <file src="src/TwigExtensionFactory.php">
     <MixedArgument>
-      <code>$config</code>
+      <code><![CDATA[$config]]></code>
       <code><![CDATA[$config['assets_url'] ?? '']]></code>
       <code><![CDATA[$config['assets_version'] ?? '']]></code>
       <code><![CDATA[$config['globals'] ?? []]]></code>
@@ -54,25 +54,25 @@
       <code><![CDATA[$container->get($urlHelper)]]></code>
     </MixedArgument>
     <MixedAssignment>
-      <code>$config</code>
+      <code><![CDATA[$config]]></code>
     </MixedAssignment>
   </file>
   <file src="src/TwigRenderer.php">
     <MixedArgument>
-      <code>$name</code>
-      <code>$namespace</code>
-      <code>$path</code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$namespace]]></code>
+      <code><![CDATA[$path]]></code>
     </MixedArgument>
     <MixedAssignment>
-      <code>$name</code>
-      <code>$namespace</code>
-      <code>$path</code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$namespace]]></code>
+      <code><![CDATA[$path]]></code>
     </MixedAssignment>
     <PropertyTypeCoercion>
-      <code>$loader</code>
+      <code><![CDATA[$loader]]></code>
     </PropertyTypeCoercion>
     <RedundantCondition>
-      <code>is_string($suffix)</code>
+      <code><![CDATA[is_string($suffix)]]></code>
     </RedundantCondition>
     <TypeDoesNotContainType>
       <code><![CDATA['html']]></code>
@@ -80,23 +80,23 @@
   </file>
   <file src="src/TwigRendererFactory.php">
     <DocblockTypeContradiction>
-      <code>is_array($config)</code>
+      <code><![CDATA[is_array($config)]]></code>
     </DocblockTypeContradiction>
     <MixedArgument>
-      <code>$config</code>
+      <code><![CDATA[$config]]></code>
       <code><![CDATA[$config['extension'] ?? 'html.twig']]></code>
     </MixedArgument>
     <MixedAssignment>
-      <code>$config</code>
+      <code><![CDATA[$config]]></code>
     </MixedAssignment>
   </file>
   <file src="test/ConfigProviderTest.php">
     <MixedReturnTypeCoercion>
-      <code>$config</code>
+      <code><![CDATA[$config]]></code>
       <code><![CDATA[array<string, mixed>]]></code>
     </MixedReturnTypeCoercion>
     <RedundantCondition>
-      <code>assertIsArray</code>
+      <code><![CDATA[assertIsArray]]></code>
     </RedundantCondition>
   </file>
   <file src="test/ExceptionTest.php">
@@ -104,17 +104,17 @@
       <code><![CDATA[strrpos(ExceptionInterface::class, '\\')]]></code>
     </PossiblyFalseOperand>
     <PossiblyUnusedMethod>
-      <code>exception</code>
+      <code><![CDATA[exception]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/TestAsset/Extension/BarTwigExtension.php">
     <UnusedClass>
-      <code>BarTwigExtension</code>
+      <code><![CDATA[BarTwigExtension]]></code>
     </UnusedClass>
   </file>
   <file src="test/TestAsset/Extension/FooTwigExtension.php">
     <UnusedClass>
-      <code>FooTwigExtension</code>
+      <code><![CDATA[FooTwigExtension]]></code>
     </UnusedClass>
   </file>
   <file src="test/TwigEnvironmentFactoryTest.php">
@@ -123,61 +123,58 @@
       <code><![CDATA['Test\Runtime\FooRuntime']]></code>
     </ArgumentTypeCoercion>
     <PossiblyUnusedMethod>
-      <code>invalidConfiguration</code>
-      <code>invalidExtensions</code>
-      <code>invalidRuntimeLoaders</code>
+      <code><![CDATA[invalidConfiguration]]></code>
+      <code><![CDATA[invalidExtensions]]></code>
+      <code><![CDATA[invalidRuntimeLoaders]]></code>
     </PossiblyUnusedMethod>
     <UndefinedClass>
       <code><![CDATA['Test\Runtime\BarRuntime']]></code>
       <code><![CDATA['Test\Runtime\FooRuntime']]></code>
     </UndefinedClass>
     <UnnecessaryVarAnnotation>
-      <code>CoreExtension</code>
-      <code>EscaperExtension</code>
+      <code><![CDATA[CoreExtension]]></code>
+      <code><![CDATA[EscaperExtension]]></code>
     </UnnecessaryVarAnnotation>
     <UnusedMethodCall>
-      <code>setAccessible</code>
+      <code><![CDATA[setAccessible]]></code>
     </UnusedMethodCall>
   </file>
   <file src="test/TwigExtensionFunctionsRenderTest.php">
     <PossiblyUnusedMethod>
-      <code>renderPathProvider</code>
-      <code>renderUrlProvider</code>
+      <code><![CDATA[renderPathProvider]]></code>
+      <code><![CDATA[renderUrlProvider]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
-      <code>$twigLoader</code>
+      <code><![CDATA[$twigLoader]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="test/TwigExtensionTest.php">
     <PossiblyFalseReference>
-      <code>getCallable</code>
-      <code>getCallable</code>
-      <code>getCallable</code>
-      <code>getCallable</code>
+      <code><![CDATA[getCallable]]></code>
+      <code><![CDATA[getCallable]]></code>
+      <code><![CDATA[getCallable]]></code>
+      <code><![CDATA[getCallable]]></code>
     </PossiblyFalseReference>
     <PossiblyUnusedMethod>
-      <code>emptyAssetVersions</code>
-      <code>zeroAssetVersions</code>
+      <code><![CDATA[emptyAssetVersions]]></code>
+      <code><![CDATA[zeroAssetVersions]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/TwigRendererFactoryTest.php">
     <InvalidArgument>
       <code><![CDATA['foo']]></code>
     </InvalidArgument>
-    <PossiblyNullArgument>
-      <code>$namespace ?: null</code>
-    </PossiblyNullArgument>
     <PossiblyNullPropertyAssignmentValue>
-      <code>null</code>
+      <code><![CDATA[null]]></code>
     </PossiblyNullPropertyAssignmentValue>
     <PossiblyUnusedMethod>
-      <code>fetchTwigEnvironment</code>
+      <code><![CDATA[fetchTwigEnvironment]]></code>
     </PossiblyUnusedMethod>
     <RedundantCondition>
-      <code>assertIsArray</code>
+      <code><![CDATA[assertIsArray]]></code>
     </RedundantCondition>
     <UnusedMethodCall>
-      <code>setAccessible</code>
+      <code><![CDATA[setAccessible]]></code>
     </UnusedMethodCall>
   </file>
   <file src="test/TwigRendererTest.php">
@@ -196,19 +193,19 @@
       <code><![CDATA[array<string, array<bool|int|string>>]]></code>
     </InvalidReturnType>
     <MixedArgument>
-      <code>$params</code>
+      <code><![CDATA[$params]]></code>
     </MixedArgument>
     <NullArgument>
-      <code>null</code>
+      <code><![CDATA[null]]></code>
     </NullArgument>
     <PossiblyUnusedMethod>
-      <code>assertEqualTemplatePath</code>
-      <code>invalidParameterValues</code>
-      <code>objectParameterValues</code>
+      <code><![CDATA[assertEqualTemplatePath]]></code>
+      <code><![CDATA[invalidParameterValues]]></code>
+      <code><![CDATA[objectParameterValues]]></code>
     </PossiblyUnusedMethod>
     <RedundantCondition>
-      <code>assertIsArray</code>
-      <code>assertIsArray</code>
+      <code><![CDATA[assertIsArray]]></code>
+      <code><![CDATA[assertIsArray]]></code>
     </RedundantCondition>
   </file>
 </files>
