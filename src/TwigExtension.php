@@ -16,11 +16,11 @@ use Twig\TwigFunction;
 class TwigExtension extends AbstractExtension implements GlobalsInterface
 {
     public function __construct(
-        private ServerUrlHelper $serverUrlHelper,
-        private UrlHelper $urlHelper,
-        private ?string $assetsUrl,
-        private null|string|int $assetsVersion,
-        private array $globals = []
+        private readonly ServerUrlHelper $serverUrlHelper,
+        private readonly UrlHelper $urlHelper,
+        private readonly ?string $assetsUrl,
+        private readonly null|string|int $assetsVersion,
+        private readonly array $globals = []
     ) {
     }
 
