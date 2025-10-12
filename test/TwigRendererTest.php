@@ -184,9 +184,6 @@ final class TwigRendererTest extends TestCase
         $this->assertEquals($content, $result);
     }
 
-    /**
-     * @group namespacing
-     */
     public function testProperlyResolvesNamespacedTemplate(): void
     {
         $renderer = new TwigRenderer();
@@ -198,9 +195,6 @@ final class TwigRendererTest extends TestCase
         $this->assertSame($expected, $test);
     }
 
-    /**
-     * @group namespacing
-     */
     public function testResolvesNamespacedTemplateWithSuffix(): void
     {
         $renderer = new TwigRenderer();
