@@ -15,7 +15,7 @@ use Psr\Container\ContainerInterface;
 
 use function sprintf;
 
-class TwigExtensionFactoryTest extends TestCase
+final class TwigExtensionFactoryTest extends TestCase
 {
     /** @var MockObject&ContainerInterface */
     private ContainerInterface $container;

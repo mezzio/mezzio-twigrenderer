@@ -14,7 +14,7 @@ use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
 
-class TwigExtensionFunctionsRenderTest extends TestCase
+final class TwigExtensionFunctionsRenderTest extends TestCase
 {
     /** @var string[] */
     protected $templates;
@@ -85,7 +85,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
     }
 
     /**
-     * @return array<string, array<mixed>>
+     * @return array<string, array{0: string, 1: string, 2: array, 3: array, 4: null|string, 5: array}>
      */
     public static function renderPathProvider(): array
     {
@@ -160,7 +160,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
     }
 
     /**
-     * @return array<string, array<mixed>>
+     * @return array<string, array{0: string, 1: string, 2: array, 3: array, 4: string|null, 5: array}>
      */
     public static function renderUrlProvider(): array
     {

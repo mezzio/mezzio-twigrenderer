@@ -13,13 +13,14 @@ use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
+use function assert;
 use function file_get_contents;
 use function sprintf;
 use function str_replace;
 use function uniqid;
 use function var_export;
 
-class TwigRendererTest extends TestCase
+final class TwigRendererTest extends TestCase
 {
     private Environment $twigEnvironment;
 
@@ -31,7 +32,7 @@ class TwigRendererTest extends TestCase
     public function assertEqualTemplatePath(
         TemplatePath $expected,
         TemplatePath $received,
-        ?string $message = null
+        ?string $message = null,
     ): void {
         $message ??= 'Failed to assert TemplatePaths are equal';
         if (
@@ -101,11 +102,11 @@ class TwigRendererTest extends TestCase
     public function assertTemplatePathNamespace(
         string $namespace,
         TemplatePath $templatePath,
-        ?string $message = null
+        ?string $message = null,
     ): void {
         $message ??= sprintf(
             'Failed to assert TemplatePath namespace matched %s',
-            var_export($namespace, true)
+            var_export($namespace, true),
         );
         $this->assertEquals($namespace, $templatePath->getNamespace(), $message);
     }
@@ -117,7 +118,7 @@ class TwigRendererTest extends TestCase
         $name   = 'Twig';
         $result = $renderer->render('twig.html', ['name' => $name]);
         $this->assertStringContainsString($name, $result);
-        $content = file_get_contents(__DIR__ . '/TestAsset/twig.html');
+        $content = $this->contents(__DIR__ . '/TestAsset/twig.html');
         $content = str_replace('{{ name }}', $name, $content);
         $this->assertEquals($content, $result);
     }
@@ -151,12 +152,12 @@ class TwigRendererTest extends TestCase
         $renderer = new TwigRenderer();
         $renderer->addPath(__DIR__ . '/TestAsset');
         $result  = $renderer->render('twig-null.html', null);
-        $content = file_get_contents(__DIR__ . '/TestAsset/twig-null.html');
+        $content = $this->contents(__DIR__ . '/TestAsset/twig-null.html');
         $this->assertEquals($content, $result);
     }
 
     /**
-     * @return array<string, array<mixed>>
+     * @return array<string, array{0: object, 1: string}>
      */
     public static function objectParameterValues(): array
     {
@@ -178,7 +179,7 @@ class TwigRendererTest extends TestCase
         $renderer->addPath(__DIR__ . '/TestAsset');
         $result = $renderer->render('twig.html', $params);
         $this->assertStringContainsString($search, $result);
-        $content = file_get_contents(__DIR__ . '/TestAsset/twig.html');
+        $content = $this->contents(__DIR__ . '/TestAsset/twig.html');
         $content = str_replace('{{ name }}', $search, $content);
         $this->assertEquals($content, $result);
     }
@@ -191,7 +192,7 @@ class TwigRendererTest extends TestCase
         $renderer = new TwigRenderer();
         $renderer->addPath(__DIR__ . '/TestAsset/test', 'test');
 
-        $expected = file_get_contents(__DIR__ . '/TestAsset/test/test.html');
+        $expected = $this->contents(__DIR__ . '/TestAsset/test/test.html');
         $test     = $renderer->render('test::test');
 
         $this->assertSame($expected, $test);
@@ -205,7 +206,7 @@ class TwigRendererTest extends TestCase
         $renderer = new TwigRenderer();
         $renderer->addPath(__DIR__ . '/TestAsset/test', 'test');
 
-        $expected = file_get_contents(__DIR__ . '/TestAsset/test/test.json');
+        $expected = $this->contents(__DIR__ . '/TestAsset/test/test.json');
         $test     = $renderer->render('test::test.json');
 
         $this->assertSame($expected, $test);
@@ -219,7 +220,7 @@ class TwigRendererTest extends TestCase
         $renderer->addDefaultParam('twig', 'name', $name);
         $result = $renderer->render('twig');
 
-        $content = file_get_contents(__DIR__ . '/TestAsset/twig.html');
+        $content = $this->contents(__DIR__ . '/TestAsset/twig.html');
         $content = str_replace('{{ name }}', $name, $content);
         $this->assertEquals($content, $result);
     }
@@ -231,12 +232,12 @@ class TwigRendererTest extends TestCase
         $name = 'Twig';
         $renderer->addDefaultParam($renderer::TEMPLATE_ALL, 'name', $name);
         $result  = $renderer->render('twig');
-        $content = file_get_contents(__DIR__ . '/TestAsset/twig.html');
+        $content = $this->contents(__DIR__ . '/TestAsset/twig.html');
         $content = str_replace('{{ name }}', $name, $content);
         $this->assertEquals($content, $result);
 
         $result  = $renderer->render('twig-2');
-        $content = file_get_contents(__DIR__ . '/TestAsset/twig-2.html');
+        $content = $this->contents(__DIR__ . '/TestAsset/twig-2.html');
         $content = str_replace('{{ name }}', $name, $content);
         $this->assertEquals($content, $result);
     }
@@ -250,12 +251,12 @@ class TwigRendererTest extends TestCase
         $renderer->addDefaultParam($renderer::TEMPLATE_ALL, 'name', $name);
         $renderer->addDefaultParam('twig-2', 'name', $name2);
         $result  = $renderer->render('twig');
-        $content = file_get_contents(__DIR__ . '/TestAsset/twig.html');
+        $content = $this->contents(__DIR__ . '/TestAsset/twig.html');
         $content = str_replace('{{ name }}', $name, $content);
         $this->assertEquals($content, $result);
 
         $result  = $renderer->render('twig-2');
-        $content = file_get_contents(__DIR__ . '/TestAsset/twig-2.html');
+        $content = $this->contents(__DIR__ . '/TestAsset/twig-2.html');
         $content = str_replace('{{ name }}', $name2, $content);
         $this->assertEquals($content, $result);
     }
@@ -268,8 +269,16 @@ class TwigRendererTest extends TestCase
         $name2 = 'Template';
         $renderer->addDefaultParam($renderer::TEMPLATE_ALL, 'name', $name);
         $result  = $renderer->render('twig', ['name' => $name2]);
-        $content = file_get_contents(__DIR__ . '/TestAsset/twig.html');
+        $content = $this->contents(__DIR__ . '/TestAsset/twig.html');
         $content = str_replace('{{ name }}', $name2, $content);
         $this->assertEquals($content, $result);
+    }
+
+    private function contents(string $file): string
+    {
+        $content = file_get_contents($file);
+        assert($content !== false);
+
+        return $content;
     }
 }
