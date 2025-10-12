@@ -15,6 +15,7 @@ use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Loader\FilesystemLoader;
 
+use function assert;
 use function is_string;
 use function preg_match;
 use function preg_replace;
@@ -22,6 +23,8 @@ use function sprintf;
 
 /**
  * Template implementation bridging twig/twig
+ *
+ * @final
  */
 class TwigRenderer implements TemplateRendererInterface
 {
@@ -127,6 +130,7 @@ class TwigRenderer implements TemplateRendererInterface
     public function normalizeTemplate(string $template): string
     {
         $template = preg_replace('#^([^:]+)::(.*)$#', '@$1/$2', $template);
+        assert(is_string($template));
         if (! preg_match('#\.[a-z]+$#i', $template)) {
             return sprintf('%s.%s', $template, $this->suffix);
         }

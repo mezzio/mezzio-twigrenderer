@@ -12,6 +12,8 @@ use Twig\TwigFunction;
 
 /**
  * Twig extension for rendering URLs and assets URLs from Mezzio.
+ *
+ * @final
  */
 class TwigExtension extends AbstractExtension implements GlobalsInterface
 {
@@ -51,8 +53,6 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
      * Usage: {{ path('article_show', {'id': '3'}, {'foo': 'bar'}, 'fragment') }}
      * Generates: /article/3?foo=bar#fragment
      *
-     * @param array $routeParams
-     * @param array $queryParams
      * @param array $options Can have the following keys:
      *                             - reuse_result_params (bool): indicates if the current
      *                             RouteResult parameters will be used, defaults to true
@@ -76,8 +76,6 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
      * Usage: {{ url('article_show', {'id': '3'}, {'foo': 'bar'}, 'fragment') }}
      * Generates: http://example.com/article/3?foo=bar#fragment
      *
-     * @param array $routeParams
-     * @param array $queryParams
      * @param array $options Can have the following keys:
      *                             - reuse_result_params (bool): indicates if the current
      *                             RouteResult parameters will be used, defaults to true

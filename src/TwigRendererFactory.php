@@ -16,6 +16,10 @@ use function sprintf;
 
 /**
  * Create and return a Twig template instance.
+ *
+ * @final
+ * @psalm-internal Mezzio\Twig
+ * @psalm-internal MezzioTest\Twig
  */
 class TwigRendererFactory
 {

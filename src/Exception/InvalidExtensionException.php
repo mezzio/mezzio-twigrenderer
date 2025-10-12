@@ -7,6 +7,7 @@ namespace Mezzio\Twig\Exception;
 use DomainException;
 use Psr\Container\ContainerExceptionInterface;
 
+/** @final */
 class InvalidExtensionException extends DomainException implements
     ContainerExceptionInterface,
     ExceptionInterface

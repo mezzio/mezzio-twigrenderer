@@ -11,6 +11,11 @@ use Psr\Container\ContainerInterface;
 
 use function sprintf;
 
+/**
+ * @final
+ * @psalm-internal Mezzio\Twig
+ * @psalm-internal MezzioTest\Twig
+ */
 class TwigExtensionFactory
 {
     public function __invoke(ContainerInterface $container): TwigExtension

@@ -7,6 +7,7 @@ namespace Mezzio\Twig;
 use Mezzio\Template\TemplateRendererInterface;
 use Twig\Environment;
 
+/** @final */
 class ConfigProvider
 {
     public function __invoke(): array

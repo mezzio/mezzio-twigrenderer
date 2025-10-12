@@ -66,6 +66,10 @@ use function sprintf;
  * Note: the various keys in the `twig` configuration key can occur in either
  * that location, or under `templates` (which was the behavior prior to 0.3.0);
  * the two arrays are merged by the factory.
+ *
+ * @final
+ * @psalm-internal Mezzio\Twig
+ * @psalm-internal MezzioTest\Twig
  */
 class TwigEnvironmentFactory
 {
