@@ -20,7 +20,7 @@ use Twig\Environment;
 use function restore_error_handler;
 use function sprintf;
 
-class TwigRendererFactoryTest extends TestCase
+final class TwigRendererFactoryTest extends TestCase
 {
     /** @var MockObject&ContainerInterface */
     private ContainerInterface $container;

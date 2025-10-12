@@ -14,7 +14,7 @@ use Twig\TwigFunction;
 
 use function sprintf;
 
-class TwigExtensionTest extends TestCase
+final class TwigExtensionTest extends TestCase
 {
     /** @var MockObject&ServerUrlHelper */
     private ServerUrlHelper $serverUrlHelper;

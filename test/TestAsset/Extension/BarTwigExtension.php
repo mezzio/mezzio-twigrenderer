@@ -6,7 +6,7 @@ namespace MezzioTest\Twig\TestAsset\Extension;
 
 use Twig\Extension\AbstractExtension;
 
-class BarTwigExtension extends AbstractExtension
+final class BarTwigExtension extends AbstractExtension
 {
     public function getName(): string
     {

@@ -27,7 +27,7 @@ use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
 use function assert;
 
-class TwigEnvironmentFactoryTest extends TestCase
+final class TwigEnvironmentFactoryTest extends TestCase
 {
     /** @var MockObject&ContainerInterface */
     private ContainerInterface $container;
@@ -156,7 +156,7 @@ class TwigEnvironmentFactoryTest extends TestCase
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<string, array{0: mixed, 1: string}>
      */
     public static function invalidConfiguration(): array
     {
@@ -240,7 +240,7 @@ class TwigEnvironmentFactoryTest extends TestCase
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<string, array{0: mixed}>
      */
     public static function invalidRuntimeLoaders(): array
     {
