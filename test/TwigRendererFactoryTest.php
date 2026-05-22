@@ -39,15 +39,14 @@ final class TwigRendererFactoryTest extends TestCase
         $this->restoreErrorHandler();
     }
 
-    /**
-     * @return mixed
-     */
-    public function fetchTwigEnvironment(TwigRenderer $twig)
+    public function fetchTwigEnvironment(TwigRenderer $twig): Environment
     {
         $r = new ReflectionProperty($twig, 'template');
-        $r->setAccessible(true);
 
-        return $r->getValue($twig);
+        $environment = $r->getValue($twig);
+        self::assertInstanceOf(Environment::class, $environment);
+
+        return $environment;
     }
 
     public function testCallingFactoryWithNoConfigReturnsTwigInstance(): TwigRenderer
