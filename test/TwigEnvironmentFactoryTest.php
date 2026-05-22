@@ -331,7 +331,6 @@ final class TwigEnvironmentFactoryTest extends TestCase
 
         $extension = $environment->getExtension(OptimizerExtension::class);
         $property  = new ReflectionProperty($extension, 'optimizers');
-        $property->setAccessible(true);
 
         $this->assertSame(0, $property->getValue($extension));
     }

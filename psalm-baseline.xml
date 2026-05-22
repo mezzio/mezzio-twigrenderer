@@ -121,9 +121,6 @@
       <code><![CDATA[CoreExtension]]></code>
       <code><![CDATA[EscaperExtension]]></code>
     </UnnecessaryVarAnnotation>
-    <UnusedMethodCall>
-      <code><![CDATA[setAccessible]]></code>
-    </UnusedMethodCall>
   </file>
   <file src="test/TwigExtensionFunctionsRenderTest.php">
     <PossiblyUnusedProperty>
@@ -156,9 +153,6 @@
     <RedundantCondition>
       <code><![CDATA[assertIsArray]]></code>
     </RedundantCondition>
-    <UnusedMethodCall>
-      <code><![CDATA[setAccessible]]></code>
-    </UnusedMethodCall>
   </file>
   <file src="test/TwigRendererTest.php">
     <DeprecatedClass>
