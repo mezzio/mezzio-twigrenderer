@@ -9,45 +9,31 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Twig\TwigExtension;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
-use Twig\Loader\LoaderInterface;
 
 final class TwigExtensionFunctionsRenderTest extends TestCase
 {
-    /** @var string[] */
-    protected $templates;
-    /** @var MockObject&LoaderInterface */
-    protected $twigLoader;
-    /** @var MockObject&ServerUrlHelper */
-    protected $serverUrlHelper;
-    /** @var MockObject&UrlHelper */
-    protected $urlHelper;
+    /** @var array<string, string> */
+    private array $templates;
+    private (ServerUrlHelper&MockObject)|(ServerUrlHelper&Stub)|null $serverUrlHelper = null;
+    private (UrlHelper&MockObject)|(UrlHelper&Stub)|null $urlHelper                   = null;
 
     protected function setUp(): void
     {
-        $this->twigLoader      = $this->createMock(LoaderInterface::class);
-        $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
-        $this->urlHelper       = $this->createMock(UrlHelper::class);
-
         $this->templates = [
             'template' => "{{ path('route') }}",
         ];
     }
 
-    public function testEnvironmentCreation(): void
-    {
-        $twig = $this->getTwigEnvironment();
-
-        $this->assertInstanceOf(Environment::class, $twig);
-    }
-
     protected function getTwigEnvironment(string $assetsUrl = '', string $assetsVersion = ''): Environment
     {
         $loader = new ArrayLoader($this->templates);
-
-        $twig = new Environment($loader, ['debug' => true, 'cache' => false]);
+        $twig   = new Environment($loader, ['debug' => true, 'cache' => false]);
+        self::assertNotNull($this->serverUrlHelper);
+        self::assertNotNull($this->urlHelper);
         $twig->addExtension(
             new TwigExtension(
                 $this->serverUrlHelper,
@@ -69,9 +55,11 @@ final class TwigExtensionFunctionsRenderTest extends TestCase
         ?string $fragment,
         array $options
     ): void {
-        $this->templates = [
+        $this->templates       = [
             'template' => $template,
         ];
+        $this->serverUrlHelper = $this->createStub(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createMock(UrlHelper::class);
         $this->urlHelper->expects(self::once())->method('generate')->with(
             $route,
             $routeParams,
@@ -142,9 +130,11 @@ final class TwigExtensionFunctionsRenderTest extends TestCase
         ?string $fragment,
         array $options
     ): void {
-        $this->templates = [
+        $this->templates       = [
             'template' => $template,
         ];
+        $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createMock(UrlHelper::class);
 
         $this->urlHelper->expects(self::once())->method('generate')->with(
             $route,
@@ -210,9 +200,11 @@ final class TwigExtensionFunctionsRenderTest extends TestCase
 
     public function testAbsoluteUrlFunction(): void
     {
-        $this->templates = [
+        $this->templates       = [
             'template' => "{{ absolute_url('path/to/something') }}",
         ];
+        $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createStub(UrlHelper::class);
 
         $this->serverUrlHelper->expects(self::once())->method('generate')->with('path/to/something')->willReturn(
             'HOST/PATH'
@@ -224,7 +216,9 @@ final class TwigExtensionFunctionsRenderTest extends TestCase
 
     public function testAssetFunction(): void
     {
-        $this->templates = [
+        $this->serverUrlHelper = $this->createStub(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createStub(UrlHelper::class);
+        $this->templates       = [
             'template' => "{{ asset('path/to/asset/name.ext') }}",
         ];
 
@@ -235,7 +229,9 @@ final class TwigExtensionFunctionsRenderTest extends TestCase
 
     public function testVersionedAssetFunction(): void
     {
-        $this->templates = [
+        $this->serverUrlHelper = $this->createStub(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createStub(UrlHelper::class);
+        $this->templates       = [
             'template' => "{{ asset('path/to/asset/name.ext', version=3) }}",
         ];
 

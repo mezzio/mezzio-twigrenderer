@@ -43,11 +43,11 @@
         "twig/twig": "^3.26.0"
     },
     "require-dev": {
-        "laminas/internal-tooling": "^1.0.0",
+        "laminas/internal-tooling": "^1.3.0",
         "laminas/laminas-coding-standard": "~3.1.0",
-        "phpunit/phpunit": "^11.5.57",
+        "phpunit/phpunit": "^12.5.45",
         "psalm/plugin-phpunit": "^0.19.7",
-        "vimeo/psalm": "^6.20.10"
+        "vimeo/psalm": "^6.21.2"
     },
     "conflict": {
         "container-interop/container-interop": "<1.2.0",
