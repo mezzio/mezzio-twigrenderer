@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.13.1@1e3b7f0a8ab32b23197b91107adc0a7ed8a05b51">
+<files psalm-version="6.21.2@7c854e9a39b14e49552cb949829abc36c16c866f">
   <file src="src/ConfigProvider.php">
     <UndefinedClass>
       <code><![CDATA[Twig_Environment]]></code>
@@ -128,11 +128,6 @@
       <code><![CDATA[CoreExtension]]></code>
       <code><![CDATA[EscaperExtension]]></code>
     </UnnecessaryVarAnnotation>
-  </file>
-  <file src="test/TwigExtensionFunctionsRenderTest.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$twigLoader]]></code>
-    </PossiblyUnusedProperty>
   </file>
   <file src="test/TwigExtensionTest.php">
     <PossiblyFalseReference>

@@ -9,7 +9,6 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Twig\Exception\InvalidConfigException;
 use Mezzio\Twig\TwigExtension;
 use Mezzio\Twig\TwigExtensionFactory;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
@@ -17,25 +16,10 @@ use function sprintf;
 
 final class TwigExtensionFactoryTest extends TestCase
 {
-    /** @var MockObject&ContainerInterface */
-    private ContainerInterface $container;
-
-    /** @var MockObject&ServerUrlHelper */
-    private ServerUrlHelper $serverUrlHelper;
-
-    /** @var MockObject&UrlHelper */
-    private UrlHelper $urlHelper;
-
-    protected function setUp(): void
-    {
-        $this->container       = $this->createMock(ContainerInterface::class);
-        $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
-        $this->urlHelper       = $this->createMock(UrlHelper::class);
-    }
-
     public function testRaisesExceptionForMissingServerUrlHelper(): void
     {
-        $this->container->expects(self::atLeastOnce())->method('has')->willReturn(false);
+        $container = $this->createMock(ContainerInterface::class);
+        $container->expects(self::atLeastOnce())->method('has')->willReturn(false);
 
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
@@ -46,12 +30,13 @@ final class TwigExtensionFactoryTest extends TestCase
         );
 
         $factory = new TwigExtensionFactory();
-        $factory($this->container);
+        $factory($container);
     }
 
     public function testRaisesExceptionForMissingUrlHelper(): void
     {
-        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap([
+        $container = $this->createMock(ContainerInterface::class);
+        $container->expects(self::atLeastOnce())->method('has')->willReturnMap([
             [ServerUrlHelper::class, true],
             [UrlHelper::class, false],
             ['Zend\Expressive\Helper\UrlHelper', false],
@@ -66,7 +51,7 @@ final class TwigExtensionFactoryTest extends TestCase
         );
 
         $factory = new TwigExtensionFactory();
-        $factory($this->container);
+        $factory($container);
     }
 
     public function testUsesAssetsConfigurationWhenAddingTwigExtension(): void
@@ -78,15 +63,16 @@ final class TwigExtensionFactoryTest extends TestCase
             ],
         ];
 
-        $this->container->expects(self::atLeastOnce())->method('has')->willReturn(true);
-        $this->container->expects(self::atLeastOnce())->method('get')->willReturnMap([
+        $container = $this->createMock(ContainerInterface::class);
+        $container->expects(self::atLeastOnce())->method('has')->willReturn(true);
+        $container->expects(self::atLeastOnce())->method('get')->willReturnMap([
             ['config', $config],
-            [ServerUrlHelper::class, $this->serverUrlHelper],
-            [UrlHelper::class, $this->urlHelper],
+            [ServerUrlHelper::class, $this->createStub(ServerUrlHelper::class)],
+            [UrlHelper::class, $this->createStub(UrlHelper::class)],
         ]);
 
         $factory   = new TwigExtensionFactory();
-        $extension = $factory($this->container);
+        $extension = $factory($container);
 
         $this->assertInstanceOf(TwigExtension::class, $extension);
         $this->assertEquals('https://assets.example.com/test?v=XYZ', $extension->renderAssetUrl('test'));
@@ -103,15 +89,16 @@ final class TwigExtensionFactoryTest extends TestCase
             ],
         ];
 
-        $this->container->expects(self::atLeastOnce())->method('has')->willReturn(true);
-        $this->container->expects(self::atLeastOnce())->method('get')->willReturnMap([
+        $container = $this->createMock(ContainerInterface::class);
+        $container->expects(self::atLeastOnce())->method('has')->willReturn(true);
+        $container->expects(self::atLeastOnce())->method('get')->willReturnMap([
             ['config', $config],
-            [ServerUrlHelper::class, $this->serverUrlHelper],
-            [UrlHelper::class, $this->urlHelper],
+            [ServerUrlHelper::class, $this->createStub(ServerUrlHelper::class)],
+            [UrlHelper::class, $this->createStub(UrlHelper::class)],
         ]);
 
         $factory   = new TwigExtensionFactory();
-        $extension = $factory($this->container);
+        $extension = $factory($container);
 
         $this->assertInstanceOf(TwigExtension::class, $extension);
         $this->assertEquals($config['twig']['globals'], $extension->getGlobals());

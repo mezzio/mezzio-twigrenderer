@@ -9,6 +9,7 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Twig\TwigExtension;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Twig\TwigFunction;
 
@@ -16,22 +17,15 @@ use function sprintf;
 
 final class TwigExtensionTest extends TestCase
 {
-    /** @var MockObject&ServerUrlHelper */
-    private ServerUrlHelper $serverUrlHelper;
-
-    /** @var MockObject&UrlHelper */
-    private UrlHelper $urlHelper;
-
-    protected function setUp(): void
-    {
-        $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
-        $this->urlHelper       = $this->createMock(UrlHelper::class);
-    }
+    private (ServerUrlHelper&MockObject)|(ServerUrlHelper&Stub)|null $serverUrlHelper = null;
+    private (UrlHelper&MockObject)|(UrlHelper&Stub)|null $urlHelper                   = null;
 
     public function testRegistersTwigFunctions(): void
     {
-        $extension = $this->createExtension('', '');
-        $functions = $extension->getFunctions();
+        $this->serverUrlHelper = $this->createStub(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createStub(UrlHelper::class);
+        $extension             = $this->createExtension('', '');
+        $functions             = $extension->getFunctions();
         $this->assertFunctionExists('path', $functions);
         $this->assertFunctionExists('url', $functions);
         $this->assertFunctionExists('absolute_url', $functions);
@@ -43,6 +37,8 @@ final class TwigExtensionTest extends TestCase
      */
     public function createExtension(?string $assetsUrl, $assetsVersion): TwigExtension
     {
+        self::assertNotNull($this->serverUrlHelper);
+        self::assertNotNull($this->urlHelper);
         return new TwigExtension(
             $this->serverUrlHelper,
             $this->urlHelper,
@@ -75,8 +71,10 @@ final class TwigExtensionTest extends TestCase
 
     public function testMapsTwigFunctionsToExpectedMethods(): void
     {
-        $extension = $this->createExtension('', '');
-        $functions = $extension->getFunctions();
+        $this->serverUrlHelper = $this->createStub(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createStub(UrlHelper::class);
+        $extension             = $this->createExtension('', '');
+        $functions             = $extension->getFunctions();
         $this->assertSame(
             [$extension, 'renderUri'],
             $this->findFunction('path', $functions)->getCallable(),
@@ -101,6 +99,8 @@ final class TwigExtensionTest extends TestCase
 
     public function testRenderUriDelegatesToComposedUrlHelper(): void
     {
+        $this->serverUrlHelper = $this->createStub(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createMock(UrlHelper::class);
         $this->urlHelper->expects(self::once())->method('generate')->with('foo', ['id' => 1], [], null, [])->willReturn(
             'URL'
         );
@@ -110,6 +110,8 @@ final class TwigExtensionTest extends TestCase
 
     public function testRenderUrlDelegatesToComposedUrlHelperAndServerUrlHelper(): void
     {
+        $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createMock(UrlHelper::class);
         $this->urlHelper->expects(self::once())->method('generate')->with('foo', ['id' => 1], [], null, [])->willReturn(
             'PATH'
         );
@@ -120,6 +122,8 @@ final class TwigExtensionTest extends TestCase
 
     public function testRenderUrlFromPathDelegatesToComposedServerUrlHelper(): void
     {
+        $this->serverUrlHelper = $this->createMock(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createStub(UrlHelper::class);
         $this->serverUrlHelper->expects(self::once())->method('generate')->with('PATH')->willReturn('HOST/PATH');
         $extension = $this->createExtension('', '');
         $this->assertSame('HOST/PATH', $extension->renderUrlFromPath('PATH'));
@@ -127,13 +131,17 @@ final class TwigExtensionTest extends TestCase
 
     public function testRenderAssetUrlUsesComposedAssetUrlAndVersionToGenerateUrl(): void
     {
-        $extension = $this->createExtension('https://images.example.com/', 'XYZ');
+        $this->serverUrlHelper = $this->createStub(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createStub(UrlHelper::class);
+        $extension             = $this->createExtension('https://images.example.com/', 'XYZ');
         $this->assertSame('https://images.example.com/foo.png?v=XYZ', $extension->renderAssetUrl('foo.png'));
     }
 
     public function testRenderAssetUrlUsesProvidedVersionToGenerateUrl(): void
     {
-        $extension = $this->createExtension('https://images.example.com/', 'XYZ');
+        $this->serverUrlHelper = $this->createStub(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createStub(UrlHelper::class);
+        $extension             = $this->createExtension('https://images.example.com/', 'XYZ');
         $this->assertSame(
             'https://images.example.com/foo.png?v=ABC',
             $extension->renderAssetUrl('foo.png', 'ABC')
@@ -154,7 +162,9 @@ final class TwigExtensionTest extends TestCase
     #[DataProvider('emptyAssetVersions')]
     public function testRenderAssetUrlWithoutProvidedVersion(?string $emptyValue): void
     {
-        $extension = $this->createExtension('https://images.example.com/', $emptyValue);
+        $this->serverUrlHelper = $this->createStub(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createStub(UrlHelper::class);
+        $extension             = $this->createExtension('https://images.example.com/', $emptyValue);
         $this->assertSame(
             'https://images.example.com/foo.png',
             $extension->renderAssetUrl('foo.png')
@@ -175,7 +185,9 @@ final class TwigExtensionTest extends TestCase
     #[DataProvider('zeroAssetVersions')]
     public function testRendersZeroVersionAssetUrl(int|string $zeroValue): void
     {
-        $extension = $this->createExtension('https://images.example.com/', $zeroValue);
+        $this->serverUrlHelper = $this->createStub(ServerUrlHelper::class);
+        $this->urlHelper       = $this->createStub(UrlHelper::class);
+        $extension             = $this->createExtension('https://images.example.com/', $zeroValue);
         $this->assertSame(
             'https://images.example.com/foo.png?v=0',
             $extension->renderAssetUrl('foo.png')

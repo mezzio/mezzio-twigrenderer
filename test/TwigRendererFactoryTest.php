@@ -11,7 +11,6 @@ use Mezzio\Twig\TwigExtension;
 use Mezzio\Twig\TwigRenderer;
 use Mezzio\Twig\TwigRendererFactory;
 use PHPUnit\Framework\Attributes\Depends;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionProperty;
@@ -22,16 +21,12 @@ use function sprintf;
 
 final class TwigRendererFactoryTest extends TestCase
 {
-    /** @var MockObject&ContainerInterface */
-    private ContainerInterface $container;
-
     /** @var callable */
     private $errorHandler;
 
     protected function setUp(): void
     {
         $this->restoreErrorHandler();
-        $this->container = $this->createMock(ContainerInterface::class);
     }
 
     protected function tearDown(): void
@@ -51,19 +46,19 @@ final class TwigRendererFactoryTest extends TestCase
 
     public function testCallingFactoryWithNoConfigReturnsTwigInstance(): TwigRenderer
     {
-        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap([
+        $container = $this->createMock(ContainerInterface::class);
+        $container->expects(self::atLeastOnce())->method('has')->willReturnMap([
             ['config', false],
             [Environment::class, true],
             [TwigExtension::class, false],
         ]);
         $environmentFactory = new TwigEnvironmentFactory();
-        $container          = $this->container;
-        $this->container->expects(self::atLeastOnce())->method('get')->with(Environment::class)->willReturnCallback(
+        $container->expects(self::atLeastOnce())->method('get')->with(Environment::class)->willReturnCallback(
             static fn(): Environment => $environmentFactory($container)
         );
 
         $factory = new TwigRendererFactory();
-        $twig    = $factory($this->container);
+        $twig    = $factory($container);
         $this->assertInstanceOf(TwigRenderer::class, $twig);
 
         return $twig;
@@ -79,20 +74,20 @@ final class TwigRendererFactoryTest extends TestCase
 
     public function testConfiguresTemplateSuffix(): void
     {
-        $config = [
+        $config    = [
             'templates' => [
                 'extension' => 'tpl',
             ],
         ];
-        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap([
+        $container = $this->createMock(ContainerInterface::class);
+        $container->expects(self::atLeastOnce())->method('has')->willReturnMap([
             ['config', true],
             [Environment::class, true],
             [TwigExtension::class, false],
         ]);
 
         $environmentFactory = new TwigEnvironmentFactory();
-        $container          = $this->container;
-        $this->container->expects(self::atLeastOnce())->method('get')->willReturnCallback(
+        $container->expects(self::atLeastOnce())->method('get')->willReturnCallback(
             static function (string $id) use ($config, $environmentFactory, $container) {
                 switch ($id) {
                     case 'config':
@@ -104,27 +99,27 @@ final class TwigRendererFactoryTest extends TestCase
             }
         );
         $factory = new TwigRendererFactory();
-        $twig    = $factory($this->container);
+        $twig    = $factory($container);
 
         $this->assertEquals('test.tpl', $twig->normalizeTemplate('test'));
     }
 
     public function testUsesGlobalsConfigurationWhenAddingTwigExtension(): void
     {
-        $config = [
+        $config    = [
             'templates' => [
                 'paths' => $this->getConfigurationPaths(),
             ],
         ];
-        $this->container->expects(self::atLeastOnce())->method('has')->willReturnMap([
+        $container = $this->createMock(ContainerInterface::class);
+        $container->expects(self::atLeastOnce())->method('has')->willReturnMap([
             ['config', true],
             [Environment::class, true],
             [TwigExtension::class, false],
         ]);
 
         $environmentFactory = new TwigEnvironmentFactory();
-        $container          = $this->container;
-        $this->container->expects(self::atLeastOnce())->method('get')->willReturnCallback(
+        $container->expects(self::atLeastOnce())->method('get')->willReturnCallback(
             static function (string $id) use ($config, $environmentFactory, $container) {
                 switch ($id) {
                     case 'config':
@@ -136,7 +131,7 @@ final class TwigRendererFactoryTest extends TestCase
             }
         );
         $factory = new TwigRendererFactory();
-        $twig    = $factory($this->container);
+        $twig    = $factory($container);
 
         $paths = $twig->getPaths();
         $this->assertPathsHasNamespace('foo', $paths);
