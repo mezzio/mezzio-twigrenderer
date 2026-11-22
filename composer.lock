@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6e483458840dc8d4f376728ae0269b1d",
+    "content-hash": "b73e56d222a8a250c057316506848fdf",
     "packages": [
         {
             "name": "fig/http-message-util",
@@ -146,42 +146,43 @@
         },
         {
             "name": "mezzio/mezzio-router",
-            "version": "3.20.0",
+            "version": "4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mezzio/mezzio-router.git",
-                "reference": "be4de58dc8822b4af653dc554f963b4cb1e23355"
+                "reference": "28e5ce526c2ea58df14a93a44277a41e7fc820a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mezzio/mezzio-router/zipball/be4de58dc8822b4af653dc554f963b4cb1e23355",
-                "reference": "be4de58dc8822b4af653dc554f963b4cb1e23355",
+                "url": "https://api.github.com/repos/mezzio/mezzio-router/zipball/28e5ce526c2ea58df14a93a44277a41e7fc820a2",
+                "reference": "28e5ce526c2ea58df14a93a44277a41e7fc820a2",
                 "shasum": ""
             },
             "require": {
                 "fig/http-message-util": "^1.1.5",
-                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+                "php": "~8.3.0 || ~8.4.0 || ~8.5.0 || ~8.6.0",
                 "psr/container": "^1.1.2 || ^2.0",
                 "psr/http-factory": "^1.0.2",
                 "psr/http-message": "^1.0.1 || ^2.0.0",
                 "psr/http-server-middleware": "^1.0.2",
-                "webmozart/assert": "^1.11 || ^2.0"
+                "webmozart/assert": "^1.11.0 || ^2.1.1"
             },
             "conflict": {
                 "mezzio/mezzio": "<3.5",
                 "zendframework/zend-expressive-router": "*"
             },
             "require-dev": {
+                "boundwize/structarmed": "^0.21.8",
+                "laminas/internal-tooling": "^1.0.0",
                 "laminas/laminas-coding-standard": "~3.1.0",
-                "laminas/laminas-diactoros": "^3.6.0",
-                "laminas/laminas-servicemanager": "^4.4.0",
-                "laminas/laminas-stratigility": "^4.2.0",
-                "phpunit/phpunit": "^11.5.42",
-                "psalm/plugin-phpunit": "^0.19.0",
-                "vimeo/psalm": "^6.13.1"
+                "laminas/laminas-diactoros": "^3.10.0",
+                "laminas/laminas-servicemanager": "^4.5.1",
+                "laminas/laminas-stratigility": "^4.3.1",
+                "phpunit/phpunit": "^11.5.57",
+                "psalm/plugin-phpunit": "^0.22.2",
+                "vimeo/psalm": "^6.20.10"
             },
             "suggest": {
-                "mezzio/mezzio-aurarouter": "^3.0 to use the Aura.Router routing adapter",
                 "mezzio/mezzio-fastroute": "^3.0 to use the FastRoute routing adapter",
                 "mezzio/mezzio-laminasrouter": "^3.0 to use the laminas-router routing adapter"
             },
@@ -220,38 +221,39 @@
             },
             "funding": [
                 {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
+                    "url": "https://crowdfunding.linuxfoundation.org/initiatives/laminas-project",
+                    "type": "custom"
                 }
             ],
-            "time": "2026-02-19T15:49:48+00:00",
-            "published-time": "2026-02-19T16:06:11+00:00"
+            "time": "2026-11-10T09:34:13+00:00",
+            "published-time": "2026-11-10T09:34:51+00:00"
         },
         {
             "name": "mezzio/mezzio-template",
-            "version": "2.13.0",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mezzio/mezzio-template.git",
-                "reference": "ad72bb31036d0639a5c5a502af234217faf6932f"
+                "reference": "6acd0a275986cf91ee5d0bc172c510af3296e7af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mezzio/mezzio-template/zipball/ad72bb31036d0639a5c5a502af234217faf6932f",
-                "reference": "ad72bb31036d0639a5c5a502af234217faf6932f",
+                "url": "https://api.github.com/repos/mezzio/mezzio-template/zipball/6acd0a275986cf91ee5d0bc172c510af3296e7af",
+                "reference": "6acd0a275986cf91ee5d0bc172c510af3296e7af",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0"
+                "php": "~8.3.0 || ~8.4.0 || ~8.5.0 || ~8.6.0"
             },
             "conflict": {
                 "zendframework/zend-expressive-template": "*"
             },
             "require-dev": {
+                "laminas/internal-tooling": "^1.0.0",
                 "laminas/laminas-coding-standard": "~3.1.0",
-                "phpunit/phpunit": "^11.5.42",
-                "psalm/plugin-phpunit": "^0.19.5",
-                "vimeo/psalm": "^6.13.1"
+                "phpunit/phpunit": "^11.5.57",
+                "psalm/plugin-phpunit": "^0.22.2",
+                "vimeo/psalm": "^6.20.10"
             },
             "suggest": {
                 "mezzio/mezzio-laminasviewrenderer": "^2.0 to use the laminas-view PhpRenderer template renderer",
@@ -285,12 +287,12 @@
             },
             "funding": [
                 {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
+                    "url": "https://crowdfunding.linuxfoundation.org/initiatives/laminas-project",
+                    "type": "custom"
                 }
             ],
-            "time": "2025-10-11T08:45:28+00:00",
-            "published-time": "2025-10-11T08:46:04+00:00"
+            "time": "2026-11-10T21:13:23+00:00",
+            "published-time": "2026-11-10T21:14:07+00:00"
         },
         {
             "name": "psr/container",
