@@ -58,10 +58,17 @@
     </MixedAssignment>
   </file>
   <file src="src/TwigRenderer.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$name]]></code>
+    </ArgumentTypeCoercion>
     <DeprecatedClass>
       <code><![CDATA[TemplatePath[]]]></code>
       <code><![CDATA[new TemplatePath($path, $name)]]></code>
     </DeprecatedClass>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$this->normalizeParams($params)]]></code>
+    </MixedArgumentTypeCoercion>
     <PropertyTypeCoercion>
       <code><![CDATA[$loader]]></code>
     </PropertyTypeCoercion>
